@@ -19,3 +19,16 @@ make_host() {
 makeinstall_host() {
   exec_thread_safe python3 setup.py install --prefix=${TOOLCHAIN}
 }
+
+make_target() {
+  python3 bootstrap.py
+}
+
+makeinstall_target() {
+  python3 setup.py install --root=$INSTALL --prefix=/usr
+}
+
+post_makeinstall_target() {
+  python_remove_source
+  rm -rf $INSTALL/usr/bin
+}
