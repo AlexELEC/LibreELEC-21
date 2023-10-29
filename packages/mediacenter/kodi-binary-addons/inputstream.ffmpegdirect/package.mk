@@ -15,3 +15,8 @@ PKG_SHORTDESC="inputstream.ffmpegdirect"
 PKG_LONGDESC="InputStream Client for streams that can be opened by FFmpeg's libavformat such as plain TS, HLS and DASH (without DRM) streams."
 
 PKG_IS_ADDON="yes"
+
+post_patch() {
+  # set version
+  find ${PKG_BUILD} -name addon.xml.in -exec sed -i 's/version="21.2.0"/version="21.2.0.9"/g' {} \;
+}
