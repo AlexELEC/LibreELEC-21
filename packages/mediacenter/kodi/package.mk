@@ -335,10 +335,11 @@ post_makeinstall_target() {
     cp ${PKG_DIR}/scripts/kodi-config ${INSTALL}/usr/lib/kodi
     cp ${PKG_DIR}/scripts/kodi-safe-mode ${INSTALL}/usr/lib/kodi
     cp ${PKG_DIR}/scripts/kodi.sh ${INSTALL}/usr/lib/kodi
+    cp ${PKG_DIR}/scripts/kodi-tvlink ${INSTALL}/usr/lib/kodi
 
-    # Configure safe mode triggers - default 5 restarts within 900 seconds/15 minutes
+    # Configure safe mode triggers - default 5 restarts within 600 seconds/10 minutes
     sed -e "s|@KODI_MAX_RESTARTS@|${KODI_MAX_RESTARTS:-5}|g" \
-        -e "s|@KODI_MAX_SECONDS@|${KODI_MAX_SECONDS:-900}|g" \
+        -e "s|@KODI_MAX_SECONDS@|${KODI_MAX_SECONDS:-600}|g" \
         -i ${INSTALL}/usr/lib/kodi/kodi.sh
 
     if [ "${KODI_PIPEWIRE_SUPPORT}" = "yes" ]; then
@@ -429,6 +430,37 @@ post_makeinstall_target() {
     xmlstarlet ed -L --subnode "/addons" -t elem -n "addon" -v "script.program.driverselect" ${ADDON_MANIFEST}
   fi
 
+  # addons AE
+  if [ -d "${ROOT}/addons" ]; then
+    mkdir -p ${INSTALL}/usr/share/kodi/addons
+    for i in `ls ${ROOT}/addons | grep zip`
+    do
+      unzip ${ROOT}/addons/$i -d ${INSTALL}/usr/share/kodi/addons
+      xmlstarlet ed -L --subnode "/addons" -t elem -n "addon" -v "`unzip -p ${ROOT}/addons/$i */addon.xml | awk -F= '/addon\ id=/ { print $2 }' | awk -F'"' '{ print $2 }'`" ${ADDON_MANIFEST}
+    done
+  fi
+  if [ -d "${PROJECT_DIR}/${PROJECT}/addons" ]; then
+    mkdir -p ${INSTALL}/usr/share/kodi/addons
+    for i in `ls ${PROJECT_DIR}/${PROJECT}/addons | grep zip`
+    do
+      unzip ${PROJECT_DIR}/${PROJECT}/addons/$i -d ${INSTALL}/usr/share/kodi/addons
+      xmlstarlet ed -L --subnode "/addons" -t elem -n "addon" -v "`unzip -p ${PROJECT_DIR}/${PROJECT}/addons/$i */addon.xml | awk -F= '/addon\ id=/ { print $2 }' | awk -F'"' '{ print $2 }'`" ${ADDON_MANIFEST}
+    done
+  fi
+
+  # install addon configs AE
+  if [ -d "${PKG_DIR}/config/script.skinshortcuts" ]; then
+      cp -R ${PKG_DIR}/config/script.skinshortcuts ${INSTALL}/usr/share/kodi/config
+  fi
+
+  if [ -d "${PKG_DIR}/config/skin.aeon.nox.silvo.ae" ]; then
+      cp -R ${PKG_DIR}/config/skin.aeon.nox.silvo.ae ${INSTALL}/usr/share/kodi/config
+  fi
+
+  # keyboard.xml as symlink
+  mv -f ${INSTALL}/usr/share/kodi/system/keymaps/keyboard.xml ${INSTALL}/usr/share/kodi/config
+  ln -sf /storage/.kodi/userdata/keymaps/keyboard.xml ${INSTALL}/usr/share/kodi/system/keymaps/keyboard.xml
+
   # more binaddons cross compile badness meh
   sed -e "s:INCLUDE_DIR /usr/include/kodi:INCLUDE_DIR ${SYSROOT_PREFIX}/usr/include/kodi:g" \
       -e "s:CMAKE_MODULE_PATH /usr/lib/kodi /usr/share/kodi/cmake:CMAKE_MODULE_PATH ${SYSROOT_PREFIX}/usr/share/kodi/cmake:g" \
@@ -455,4 +487,6 @@ post_install() {
   enable_service kodi-waitonnetwork.service
   enable_service kodi.service
   enable_service kodi-lirc-suspend.service
+  enable_service kodi-cleanpackagecache.service
+  enable_service kodi-tvlink.service
 }
