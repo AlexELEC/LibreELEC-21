@@ -2,8 +2,8 @@
 # Copyright (C) 2011-present Alex@ELEC (https://alexelec.tv)
 
 PKG_NAME="idna"
-PKG_VERSION="3.4"
-PKG_SHA256="afbfa0caebd4872b38ab1af86b37bd4f46d4fccc8d5ce226cb9ee91b91196848"
+PKG_VERSION="3.3"
+PKG_SHA256="34b145ffe35b7872e9a3e0abc3a3a8330db90a0fd58db978725fd05c5c7d9f88"
 PKG_LICENSE="BSD"
 PKG_SITE="https://github.com/kjd/idna"
 PKG_URL="$PKG_SITE/archive/v$PKG_VERSION.tar.gz"
