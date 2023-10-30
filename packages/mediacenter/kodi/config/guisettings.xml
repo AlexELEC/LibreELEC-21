@@ -1,10 +1,11 @@
 <settings version="2">
     <setting id="audiooutput.volumesteps">50</setting>
-    <setting id="pvrmanager.syncchannelgroups">true</setting>
+    <setting id="videoplayer.useprimedecoder">true</setting>
+    <setting id="pvrmanager.backendchannelgroupsorder">false</setting>
+    <setting id="epg.pastdaystodisplay">2</setting>
+    <setting id="epg.futuredaystodisplay">1</setting>
     <setting id="pvrplayback.enableradiords">false</setting>
     <setting id="pvrplayback.fps">1</setting>
-    <setting id="pvrplayback.signalquality">true</setting>
-    <setting id="pvrplayback.switchtofullscreen">false</setting>
     <setting id="services.airplay">false</setting>
     <general>
         <settinglevel>3</settinglevel>
