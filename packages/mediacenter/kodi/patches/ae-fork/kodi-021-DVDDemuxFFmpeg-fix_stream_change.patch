@@ -1,16 +1,31 @@
 diff -Naurp kodi/xbmc/cores/VideoPlayer/DVDDemuxers/DVDDemuxFFmpeg.cpp kodi-patch/xbmc/cores/VideoPlayer/DVDDemuxers/DVDDemuxFFmpeg.cpp
---- kodi/xbmc/cores/VideoPlayer/DVDDemuxers/DVDDemuxFFmpeg.cpp	2023-08-15 09:37:02.000000000 +0000
-+++ kodi-patch/xbmc/cores/VideoPlayer/DVDDemuxers/DVDDemuxFFmpeg.cpp	2023-08-19 07:59:15.000000000 +0000
-@@ -207,6 +207,8 @@ CDVDDemuxFFmpeg::CDVDDemuxFFmpeg() : CDV
+--- kodi/xbmc/cores/VideoPlayer/DVDDemuxers/DVDDemuxFFmpeg.cpp	2023-11-01 15:48:40.969887774 +0000
++++ kodi-patch/xbmc/cores/VideoPlayer/DVDDemuxers/DVDDemuxFFmpeg.cpp	2023-11-01 15:46:38.478089069 +0000
+@@ -208,6 +208,9 @@ CDVDDemuxFFmpeg::CDVDDemuxFFmpeg() : CDV
    m_bSup = false;
    m_speed = DVD_PLAYSPEED_NORMAL;
    m_program = UINT_MAX;
 +  m_oldStreams = 0;
 +  m_oldProgCount = 0;
++  m_bResetStream = false;
    m_pkt.result = -1;
    memset(&m_pkt.pkt, 0, sizeof(AVPacket));
    m_streaminfo = true; /* set to true if we want to look for streams before playback */
-@@ -1086,17 +1088,44 @@ DemuxPacket* CDVDDemuxFFmpeg::Read()
+@@ -1032,6 +1035,13 @@ DemuxPacket* CDVDDemuxFFmpeg::ReadIntern
+   // would consider this the end of stream and stop.
+   bool bReturnEmpty = false;
+   {
++    if (m_bResetStream)
++    {
++      m_bResetStream = false;
++      CLog::Log(LOGINFO, "CDVDDemuxFFmpeg::Read() Reset stream...");
++      Flush();
++      Reset();
++    }
+     std::unique_lock<CCriticalSection> lock(m_critSection); // open lock scope
+     if (m_pFormatContext)
+     {
+@@ -1088,17 +1098,40 @@ DemuxPacket* CDVDDemuxFFmpeg::ReadIntern
          if (IsProgramChange())
          {
            CLog::Log(LOGINFO, "CDVDDemuxFFmpeg::Read() stream change");
@@ -38,22 +53,18 @@ diff -Naurp kodi/xbmc/cores/VideoPlayer/DVDDemuxers/DVDDemuxFFmpeg.cpp kodi-patc
 +            // reset streams
 +            m_oldStreams = 0;
 +            m_oldProgCount = 0;
-+            Flush();
-+            Reset();
-+            CLog::Log(LOGINFO, "CDVDDemuxFFmpeg::Read() Reset stream...");
-+            m_pkt.pkt.size = 0;
-+            m_pkt.pkt.data = NULL;
++            m_bResetStream = true;
 +            return nullptr;
 +          }
 +          else
 +          {
 +            m_oldStreams = m_newStreams;
 +            m_oldProgCount = m_newProgCount;
- 
--          return pPacket;
++
 +            // update streams
 +            CreateStreams(m_program);
-+
+ 
+-          return pPacket;
 +            pPacket = CDVDDemuxUtils::AllocateDemuxPacket(0);
 +            pPacket->iStreamId = DMX_SPECIALID_STREAMCHANGE;
 +            pPacket->demuxerId = m_demuxerId;
@@ -64,11 +75,13 @@ diff -Naurp kodi/xbmc/cores/VideoPlayer/DVDDemuxers/DVDDemuxFFmpeg.cpp kodi-patc
  
          AVStream* stream = m_pFormatContext->streams[m_pkt.pkt.stream_index];
 diff -Naurp kodi/xbmc/cores/VideoPlayer/DVDDemuxers/DVDDemuxFFmpeg.h kodi-patch/xbmc/cores/VideoPlayer/DVDDemuxers/DVDDemuxFFmpeg.h
---- kodi/xbmc/cores/VideoPlayer/DVDDemuxers/DVDDemuxFFmpeg.h	2023-08-15 09:37:02.000000000 +0000
-+++ kodi-patch/xbmc/cores/VideoPlayer/DVDDemuxers/DVDDemuxFFmpeg.h	2023-08-19 07:06:53.000000000 +0000
-@@ -153,6 +153,8 @@ protected:
+--- kodi/xbmc/cores/VideoPlayer/DVDDemuxers/DVDDemuxFFmpeg.h	2023-10-29 22:31:26.000000000 +0000
++++ kodi-patch/xbmc/cores/VideoPlayer/DVDDemuxers/DVDDemuxFFmpeg.h	2023-11-01 15:46:38.482089063 +0000
+@@ -152,7 +152,10 @@ protected:
+   bool     m_bMatroska;
    bool     m_bAVI;
    bool     m_bSup;
++  bool     m_bResetStream;
    int      m_speed;
 +  unsigned int m_oldStreams;
 +  unsigned int m_oldProgCount;
