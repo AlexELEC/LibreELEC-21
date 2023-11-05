@@ -1,5 +1,6 @@
 [Unit]
 Description=Eventlirc server daemon
+ConditionPathExists=!/storage/.cache/services/hid-remote.conf
 
 [Service]
 ExecStart=/usr/sbin/eventlircd -f --evmap=/etc/eventlircd.d --socket=/run/lirc/lircd

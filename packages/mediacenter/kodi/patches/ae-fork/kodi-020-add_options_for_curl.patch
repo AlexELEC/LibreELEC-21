@@ -1,0 +1,90 @@
+diff -Naurp kodi-2c4eaebca3/xbmc/addons/kodi-dev-kit/include/kodi/c-api/filesystem.h kodi-2c4eaebca3-patch/xbmc/addons/kodi-dev-kit/include/kodi/c-api/filesystem.h
+--- kodi-2c4eaebca3/xbmc/addons/kodi-dev-kit/include/kodi/c-api/filesystem.h	2022-08-29 09:51:59.000000000 +0300
++++ kodi-2c4eaebca3-patch/xbmc/addons/kodi-dev-kit/include/kodi/c-api/filesystem.h	2022-08-29 09:57:58.000000000 +0300
+@@ -120,6 +120,9 @@ extern "C"
+     /// | <b>`active-remote`</b>              | Set the "active-remote" header
+     /// | <b>`auth`</b>                       | Set the authentication method. Possible values: any, anysafe, digest, ntlm
+     /// | <b>`connection-timeout`</b>         | Set the connection timeout in seconds
++    /// | <b>`data-timeout`</b>               | Set the maximum time the transfer is allowed to complete in seconds
++    /// | <b>`lowspeed-time`</b>              | It contains the time in number seconds that the transfer speed should be below the CURLOPT_LOW_SPEED_LIMIT (default 1 Byte/sec) for the library to consider it too slow and abort
++    /// | <b>`speed-limit`</b>                | Set low speed limit in bytes per second
+     /// | <b>`cookie`</b>                     | Set the "cookie" header
+     /// | <b>`customrequest`</b>              | Set a custom HTTP request like DELETE
+     /// | <b>`noshout`</b>                    | Set to true if kodi detects a stream as shoutcast by mistake.
+diff -Naurp kodi-2c4eaebca3/xbmc/filesystem/CurlFile.cpp kodi-2c4eaebca3-patch/xbmc/filesystem/CurlFile.cpp
+--- kodi-2c4eaebca3/xbmc/filesystem/CurlFile.cpp	2022-08-29 09:55:36.450585283 +0300
++++ kodi-2c4eaebca3-patch/xbmc/filesystem/CurlFile.cpp	2022-08-29 10:04:17.000000000 +0300
+@@ -425,8 +425,10 @@ CCurlFile::CCurlFile()
+   m_multisession  = true;
+   m_seekable = true;
+   m_connecttimeout = 0;
++  m_datatimeout = 0;
++  m_speedlimit = 1;
+   m_redirectlimit = 5;
+-  m_lowspeedtime = 0;
++  m_lowspeedtime = -1;
+   m_ftppasvip = false;
+   m_bufferSize = 32768;
+   m_postdataset = false;
+@@ -644,10 +646,13 @@ void CCurlFile::SetCommonOptions(CReadSt
+   // set our timeouts, we abort connection after m_timeout, and reads after no data for m_timeout seconds
+   g_curlInterface.easy_setopt(h, CURLOPT_CONNECTTIMEOUT, m_connecttimeout);
+ 
++  // set maximum time the transfer is allowed to complete in seconds
++  g_curlInterface.easy_setopt(h, CURLOPT_TIMEOUT, m_datatimeout);
++
+   // We abort in case we transfer less than 1byte/second
+-  g_curlInterface.easy_setopt(h, CURLOPT_LOW_SPEED_LIMIT, 1);
++  g_curlInterface.easy_setopt(h, CURLOPT_LOW_SPEED_LIMIT, m_speedlimit);
+ 
+-  if (m_lowspeedtime == 0)
++  if (m_lowspeedtime < 0)
+     m_lowspeedtime = CServiceBroker::GetSettingsComponent()->GetAdvancedSettings()->m_curllowspeedtime;
+ 
+   // Set the lowspeed time very low as it seems Curl takes much longer to detect a lowspeed condition
+@@ -890,6 +895,12 @@ void CCurlFile::ParseAndCorrectUrl(CURL
+           m_cipherlist = value;
+         else if (name == "connection-timeout")
+           m_connecttimeout = strtol(value.c_str(), NULL, 10);
++        else if (name == "data-timeout")
++          m_datatimeout = strtol(value.c_str(), NULL, 10);
++        else if (name == "lowspeed-time")
++          m_lowspeedtime = strtol(value.c_str(), NULL, 10);
++        else if (name == "speed-limit")
++          m_speedlimit = strtol(value.c_str(), NULL, 10);
+         else if (name == "failonerror")
+           m_failOnError = value == "true";
+         else if (name == "redirect-limit")
+diff -Naurp kodi-2c4eaebca3/xbmc/filesystem/CurlFile.h kodi-2c4eaebca3-patch/xbmc/filesystem/CurlFile.h
+--- kodi-2c4eaebca3/xbmc/filesystem/CurlFile.h	2022-08-29 09:51:59.000000000 +0300
++++ kodi-2c4eaebca3-patch/xbmc/filesystem/CurlFile.h	2022-08-29 10:05:45.000000000 +0300
+@@ -67,6 +67,7 @@ namespace XFILE
+       void SetAcceptEncoding(const std::string& encoding) { m_acceptencoding = encoding; }
+       void SetAcceptCharset(const std::string& charset) { m_acceptCharset = charset; }
+       void SetTimeout(int connecttimeout) { m_connecttimeout = connecttimeout; }
++      void SetDataTimeout(int datatimeout) { m_datatimeout = datatimeout; }
+       void SetLowSpeedTime(int lowspeedtime) { m_lowspeedtime = lowspeedtime; }
+       void SetPostData(const std::string& postdata) { m_postdata = postdata; }
+       void SetReferer(const std::string& referer) { m_referer = referer; }
+@@ -173,6 +174,8 @@ namespace XFILE
+       std::string m_cipherlist;
+       bool m_ftppasvip;
+       int m_connecttimeout;
++      int m_datatimeout;
++      int m_speedlimit;
+       int m_redirectlimit;
+       int m_lowspeedtime;
+       bool m_opened;
+diff -Naurp kodi-2c4eaebca3/xbmc/filesystem/IFileTypes.h kodi-2c4eaebca3-patch/xbmc/filesystem/IFileTypes.h
+--- kodi-2c4eaebca3/xbmc/filesystem/IFileTypes.h	2022-08-29 09:51:59.000000000 +0300
++++ kodi-2c4eaebca3-patch/xbmc/filesystem/IFileTypes.h	2022-08-29 10:07:13.000000000 +0300
+@@ -79,6 +79,9 @@ enum CURLOPTIONTYPE
+  * active-remote: Set the "active-remote" header
+  * auth: Set the authentication method. Possible values: any, anysafe, digest, ntlm
+  * connection-timeout: Set the connection timeout in seconds
++ * data-timeout: Set maximum time the transfer is allowed to complete in seconds
++ * lowspeed-time: It contains the time in number seconds that the transfer speed should be below the CURLOPT_LOW_SPEED_LIMIT (default 1 Byte/sec) for the library to consider it too slow and abort
++ * speed-limit: Set low speed limit in bytes per second
+  * cookie: Set the "cookie" header
+  * customrequest: Set a custom HTTP request like DELETE
+  * noshout: Set to true if kodi detects a stream as shoutcast by mistake.

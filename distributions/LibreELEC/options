@@ -12,12 +12,12 @@
 # Welcome Message for e.g. SSH Server (up to 5 Lines)
   GREETING0="##############################################"
   GREETING1="#                 LibreELEC                  #"
-  GREETING2="#            https://libreelec.tv            #"
+  GREETING2="#            https://alexelec.tv             #"
   GREETING3="##############################################"
   GREETING4=""
 
 # Root password to integrate in the target system
-  ROOT_PASSWORD="libreelec"
+  ROOT_PASSWORD="mcpc"
 
 # Partition labels for USB/SD installation media
   DISTRO_BOOTLABEL="LIBREELEC"
@@ -256,4 +256,4 @@
 # additional packages to install:
 # Space separated list is supported,
 # e.g. ADDITIONAL_PACKAGES="PACKAGE1 PACKAGE2"
-  ADDITIONAL_PACKAGES=""
+  ADDITIONAL_PACKAGES="hid-remote tvlink HTOP MC"

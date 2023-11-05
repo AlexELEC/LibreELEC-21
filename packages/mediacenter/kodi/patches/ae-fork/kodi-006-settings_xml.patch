@@ -1,0 +1,99 @@
+diff -Naurp kodi-19.0RC1-Matrix/system/settings/settings.xml kodi-19.0RC1-Matrix-patch/system/settings/settings.xml
+--- kodi-19.0RC1-Matrix/system/settings/settings.xml	2021-01-15 14:42:30.000000000 +0200
++++ kodi-19.0RC1-Matrix-patch/system/settings/settings.xml	2021-01-17 11:18:27.000000000 +0200
+@@ -49,7 +49,7 @@
+       <group id="2" label="19177">
+         <setting id="videoplayer.adjustrefreshrate" type="integer" label="170" help="36164">
+           <level>1</level>
+-          <default>0</default> <!-- ADJUST_REFRESHRATE_OFF -->
++          <default>2</default> <!-- ADJUST_REFRESHRATE_ON_STARTSTOP -->
+           <constraints>
+             <options>
+               <option label="351">0</option> <!-- ADJUST_REFRESHRATE_OFF -->
+@@ -79,7 +79,7 @@
+         </setting>
+         <setting id="videoplayer.stretch43" type="integer" label="173" help="36171">
+           <level>2</level>
+-          <default>0</default> <!-- ViewModeNormal -->
++          <default>4</default> <!-- ViewModeStretch16x9 -->
+           <constraints>
+             <options>
+               <option label="630">0</option> <!-- ViewModeNormal -->
+@@ -177,7 +177,7 @@
+       <group id="5" label="14233">
+         <setting id="videoplayer.teletextenabled" type="boolean" label="23050" help="36174">
+           <level>3</level>
+-          <default>true</default>
++          <default>false</default>
+           <control type="toggle" />
+         </setting>
+         <setting id="videoplayer.teletextscale" type="boolean" parent="videoplayer.teletextenabled" label="23055" help="36175">
+@@ -840,7 +840,7 @@
+         </setting>
+         <setting id="filelists.allowfiledeletion" type="boolean" label="14071" help="36125">
+           <level>2</level>
+-          <default>false</default>
++          <default>true</default>
+           <dependencies>
+             <dependency type="enable">
+               <or>
+@@ -1552,7 +1552,7 @@
+       <group id="1" label="128">
+         <setting id="epg.pastdaystodisplay" type="integer" label="19229" help="36219">
+           <level>2</level>
+-          <default>1</default>
++          <default>5</default>
+           <constraints>
+             <minimum>0</minimum>
+             <step>1</step>
+@@ -1564,7 +1564,7 @@
+         </setting>
+         <setting id="epg.futuredaystodisplay" type="integer" label="19182" help="36220">
+           <level>2</level>
+-          <default>3</default>
++          <default>2</default>
+           <constraints>
+             <minimum>1</minimum>
+             <step>1</step>
+@@ -1597,7 +1597,7 @@
+       <group id="2" label="14303">
+         <setting id="epg.epgupdate" type="integer" label="19071" help="36221">
+           <level>2</level>
+-          <default>120</default>
++          <default>180</default>
+           <constraints>
+             <minimum>15</minimum>
+             <step>15</step>
+@@ -3181,7 +3181,7 @@
+         </setting>
+         <setting id="general.addonnotifications" type="boolean" label="36609" help="36612">
+           <level>0</level>
+-          <default>false</default>
++          <default>true</default>
+           <control type="toggle" />
+           <dependencies>
+             <dependency type="enable" setting="general.addonupdates">0</dependency>
+@@ -3197,12 +3197,12 @@
+         </setting>
+         <setting id="addons.unknownsources" type="boolean" label="36615" help="36616">
+           <level>0</level>
+-          <default>false</default>
++          <default>true</default>
+           <control type="toggle" />
+         </setting>
+         <setting id="addons.updatemode" type="integer" parent="addons.unknownsources" label="36422" help="36423">
+           <level>1</level>
+-          <default>0</default>
++          <default>1</default>
+           <constraints>
+             <options>
+               <option label="36437">0</option> <!-- OFFICIAL_ONLY -->
+@@ -3257,7 +3257,7 @@
+       <group id="2" label="14111">
+         <setting id="eventlog.enabled" type="boolean" label="14112" help="36460">
+           <level>1</level>
+-          <default>true</default>
++          <default>false</default>
+           <control type="toggle" />
+         </setting>
+         <setting id="eventlog.enablednotifications" type="boolean" parent="eventlog.enabled" label="14113" help="36461">

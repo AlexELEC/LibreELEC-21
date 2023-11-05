@@ -33,6 +33,29 @@ if [ ! -f $KODI_ROOT/userdata/guisettings.xml ] ; then
   fi
 fi
 
+# add default AE addons settings
+if [ ! -d $KODI_ROOT/userdata/addon_data/script.skinshortcuts ]; then
+  if [ -d /usr/share/kodi/config/script.skinshortcuts ]; then
+    mkdir -p $KODI_ROOT/userdata/addon_data
+    cp -R /usr/share/kodi/config/script.skinshortcuts $KODI_ROOT/userdata/addon_data
+  fi
+fi
+
+if [ ! -d $KODI_ROOT/userdata/addon_data/skin.aeon.nox.silvo.ae ]; then
+  if [ -d /usr/share/kodi/config/skin.aeon.nox.silvo.ae ]; then
+    mkdir -p $KODI_ROOT/userdata/addon_data
+    cp -R /usr/share/kodi/config/skin.aeon.nox.silvo.ae $KODI_ROOT/userdata/addon_data
+  fi
+fi
+
+# keyboard.xml
+if [ ! -f $KODI_ROOT/userdata/keymaps/keyboard.xml ]; then
+  if [ -f /usr/share/kodi/config/keyboard.xml ]; then
+    mkdir -p $KODI_ROOT/userdata/keymaps
+    cp /usr/share/kodi/config/keyboard.xml $KODI_ROOT/userdata/keymaps
+  fi
+fi
+
 KODI_ARGS=""
 
 echo "KODI_ARGS=\"$KODI_ARGS\"" > /run/libreelec/kodi.conf
