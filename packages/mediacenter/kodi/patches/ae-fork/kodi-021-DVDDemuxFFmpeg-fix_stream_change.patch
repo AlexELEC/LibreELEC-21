@@ -1,6 +1,6 @@
 diff -Naurp kodi/xbmc/cores/VideoPlayer/DVDDemuxers/DVDDemuxFFmpeg.cpp kodi-patch/xbmc/cores/VideoPlayer/DVDDemuxers/DVDDemuxFFmpeg.cpp
 --- kodi/xbmc/cores/VideoPlayer/DVDDemuxers/DVDDemuxFFmpeg.cpp	2023-11-01 15:48:40.969887774 +0000
-+++ kodi-patch/xbmc/cores/VideoPlayer/DVDDemuxers/DVDDemuxFFmpeg.cpp	2023-11-02 11:46:52.000000000 +0000
++++ kodi-patch/xbmc/cores/VideoPlayer/DVDDemuxers/DVDDemuxFFmpeg.cpp	2023-11-05 15:08:39.000000000 +0000
 @@ -208,6 +208,9 @@ CDVDDemuxFFmpeg::CDVDDemuxFFmpeg() : CDV
    m_bSup = false;
    m_speed = DVD_PLAYSPEED_NORMAL;
@@ -17,7 +17,7 @@ diff -Naurp kodi/xbmc/cores/VideoPlayer/DVDDemuxers/DVDDemuxFFmpeg.cpp kodi-patc
  
 +  if (m_bResetStream)
 +  {
-+    CLog::Log(LOGINFO, "CDVDDemuxFFmpeg::Open(): Reset Video Streams");
++    CLog::Log(LOGINFO, "CDVDDemuxFFmpeg::Open(): Reset Stream");
 +    m_bResetStream = false;
 +    m_program = 0;
 +    m_checkTransportStream = true;
@@ -27,13 +27,9 @@ diff -Naurp kodi/xbmc/cores/VideoPlayer/DVDDemuxers/DVDDemuxFFmpeg.cpp kodi-patc
    // reset any timeout
    m_timeout.SetInfinite();
  
-@@ -1088,17 +1100,42 @@ DemuxPacket* CDVDDemuxFFmpeg::ReadIntern
-         if (IsProgramChange())
-         {
-           CLog::Log(LOGINFO, "CDVDDemuxFFmpeg::Read() stream change");
--          av_dump_format(m_pFormatContext, 0, CURL::GetRedacted(m_pInput->GetFileName()).c_str(),
--                         0);
-+          av_dump_format(m_pFormatContext, 0, CURL::GetRedacted(m_pInput->GetFileName()).c_str(), 0);
+@@ -1091,14 +1103,39 @@ DemuxPacket* CDVDDemuxFFmpeg::ReadIntern
+           av_dump_format(m_pFormatContext, 0, CURL::GetRedacted(m_pInput->GetFileName()).c_str(),
+                          0);
  
 -          // update streams
 -          CreateStreams(m_program);
@@ -56,7 +52,6 @@ diff -Naurp kodi/xbmc/cores/VideoPlayer/DVDDemuxers/DVDDemuxFFmpeg.cpp kodi-patc
 +            m_oldStreams = 0;
 +            m_oldProgCount = 0;
 +            m_bResetStream = true;
-+            CLog::Log(LOGINFO, "CDVDDemuxFFmpeg::Read() Reset stream...");
 +            Reset();
 +            return nullptr;
 +          }
