@@ -1,6 +1,6 @@
 diff -Naurp LibreELEC-settings/resources/lib/defaults.py LibreELEC-settings-patch/resources/lib/defaults.py
---- LibreELEC-settings/resources/lib/defaults.py	2023-06-03 13:27:20.000000000 +0000
-+++ LibreELEC-settings-patch/resources/lib/defaults.py	2023-10-30 07:42:04.000000000 +0000
+--- LibreELEC-settings/resources/lib/defaults.py	2023-11-09 14:16:23.000000000 +0000
++++ LibreELEC-settings-patch/resources/lib/defaults.py	2023-11-10 07:47:17.000000000 +0000
 @@ -85,15 +85,6 @@ system = {
      'JOURNALD_CONFIG_FILE': '/storage/.cache/journald.conf.d/00_settings.conf'
      }
@@ -18,9 +18,9 @@ diff -Naurp LibreELEC-settings/resources/lib/defaults.py LibreELEC-settings-patc
  
  _services = {
 diff -Naurp LibreELEC-settings/resources/lib/modules/updates.py LibreELEC-settings-patch/resources/lib/modules/updates.py
---- LibreELEC-settings/resources/lib/modules/updates.py	2023-06-03 13:27:20.000000000 +0000
+--- LibreELEC-settings/resources/lib/modules/updates.py	2023-11-09 14:16:23.000000000 +0000
 +++ LibreELEC-settings-patch/resources/lib/modules/updates.py	1970-01-01 00:00:00.000000000 +0000
-@@ -1,740 +0,0 @@
+@@ -1,722 +0,0 @@
 -# SPDX-License-Identifier: GPL-2.0-or-later
 -# Copyright (C) 2009-2013 Stephan Raue (stephan@openelec.tv)
 -# Copyright (C) 2013 Lutz Fiebach (lufie@openelec.tv)
@@ -35,7 +35,6 @@ diff -Naurp LibreELEC-settings/resources/lib/modules/updates.py LibreELEC-settin
 -import time
 -from datetime import datetime
 -from functools import cmp_to_key
--from xml.dom import minidom
 -
 -import xbmc
 -import xbmcgui
@@ -43,7 +42,6 @@ diff -Naurp LibreELEC-settings/resources/lib/modules/updates.py LibreELEC-settin
 -import log
 -import modules
 -import oe
--import oeWindows
 -import os_tools
 -
 -
@@ -521,40 +519,28 @@ diff -Naurp LibreELEC-settings/resources/lib/modules/updates.py LibreELEC-settin
 -                for i in sorted(self.update_json[channel]['project'][oe.ARCHITECTURE]['releases'], key=int, reverse=True):
 -                    if shortname:
 -                        # check tarballs, then images, then uboot images for matching file; add subpath if key is present
--                        try:
+-                        if 'file' in self.update_json[channel]['project'][oe.ARCHITECTURE]['releases'][i]:
 -                            build = self.update_json[channel]['project'][oe.ARCHITECTURE]['releases'][i]['file']['name']
 -                            if shortname in build:
--                                try:
+-                                if 'subpath' in self.update_json[channel]['project'][oe.ARCHITECTURE]['releases'][i]['file']:
 -                                    build = f"{self.update_json[channel]['project'][oe.ARCHITECTURE]['releases'][i]['file']['subpath']}/{build}"
--                                except KeyError:
--                                    pass
 -                                break
--                        except KeyError:
--                            pass
--                        try:
+-                        if 'image' in self.update_json[channel]['project'][oe.ARCHITECTURE]['releases'][i]:
 -                            build = self.update_json[channel]['project'][oe.ARCHITECTURE]['releases'][i]['image']['name']
 -                            if shortname in build:
--                                try:
+-                                if 'subpath' in self.update_json[channel]['project'][oe.ARCHITECTURE]['releases'][i]['image']:
 -                                    build = f"{self.update_json[channel]['project'][oe.ARCHITECTURE]['releases'][i]['image']['subpath']}/{build}"
--                                except KeyError:
--                                    pass
 -                                break
--                        except KeyError:
--                            pass
--                        try:
+-                        if 'uboot' in self.update_json[channel]['project'][oe.ARCHITECTURE]['releases'][i]:
 -                            for uboot_image_data in self.update_json[channel]['project'][oe.ARCHITECTURE]['releases'][i]['uboot']:
 -                                build = uboot_image_data['name']
 -                                if shortname in build:
--                                    try:
+-                                    if 'subpath' in uboot_image_data:
 -                                        build = f"{uboot_image_data['subpath']}/{build}"
--                                    except KeyError:
--                                        pass
 -                                    break_loop = True
 -                                    break
 -                            if break_loop:
 -                                break
--                        except KeyError:
--                            pass
 -                    else:
 -                        matches = []
 -                        try:
@@ -566,21 +552,15 @@ diff -Naurp LibreELEC-settings/resources/lib/modules/updates.py LibreELEC-settin
 -                        else:
 -                            # The same release could have tarballs and images. Prioritize tarball in response.
 -                            # images and uboot images in same release[i] entry are mutually exclusive.
--                            try:
+-                            if 'file' in self.update_json[channel]['project'][oe.ARCHITECTURE]['releases'][i]:
 -                                update_files.append(pretty_filename(self.update_json[channel]['project'][oe.ARCHITECTURE]['releases'][i]['file']['name']))
 -                                continue
--                            except KeyError:
--                                pass
--                            try:
+-                            if 'image' in self.update_json[channel]['project'][oe.ARCHITECTURE]['releases'][i]:
 -                                update_files.append(pretty_filename(self.update_json[channel]['project'][oe.ARCHITECTURE]['releases'][i]['image']['name']))
 -                                continue
--                            except KeyError:
--                                pass
--                            try:
+-                            if 'uboot' in self.update_json[channel]['project'][oe.ARCHITECTURE]['releases'][i]:
 -                                for uboot_image_data in self.update_json[channel]['project'][oe.ARCHITECTURE]['releases'][i]['uboot']:
 -                                    update_files.append(pretty_filename(uboot_image_data['name']))
--                            except KeyError:
--                                pass
 -
 -        return build if build else update_files
 -
@@ -615,6 +595,8 @@ diff -Naurp LibreELEC-settings/resources/lib/modules/updates.py LibreELEC-settin
 -                if self.struct['update']['settings']['AutoUpdate']['value'] == 'auto' and force == False:
 -                    self.update_in_progress = True
 -                    self.do_autoupdate(None, True)
+-        else:
+-            log.log(f'Unable to load: {url}', log.ERROR)
 -
 -    @log.log_function()
 -    def do_autoupdate(self, listItem=None, silent=False):
