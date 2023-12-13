@@ -1,0 +1,13 @@
+#!/bin/sh
+
+MAX_TIME=30
+CONF_FILE="/storage/.config/mumudvb/Kyiv-t2.conf"
+FRONT_END="/dev/dvb/adapter0/frontend1"
+
+for i in `seq 1 $MAX_TIME` ; do
+    [ -e $FRONT_END ] && break
+    sleep 1
+done
+
+mkdir -p /var/run/mumudvb
+/usr/bin/mumudvb -d -c $CONF_FILE

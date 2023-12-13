@@ -1,0 +1,14 @@
+[Unit]
+Description=MuMuDVB service
+After=network-online.target
+Before=tvlink.service
+
+[Service]
+ExecStart=/storage/.config/mumudvb/mumudvb.run
+ExecStop=/bin/kill -TERM $MAINPID
+Restart=always
+RestartSec=3
+StartLimitInterval=0
+
+[Install]
+WantedBy=multi-user.target

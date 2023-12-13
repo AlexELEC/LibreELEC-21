@@ -19,4 +19,5 @@ PKG_CONFIGURE_OPTS_TARGET="--prefix=/usr \
 post_makeinstall_target() {
   mkdir -p $INSTALL/usr/config/mumudvb/examples
     cp -a $PKG_BUILD/doc/configuration_examples/* $INSTALL/usr/config/mumudvb/examples
+    cp -a $PKG_DIR/config/* $INSTALL/usr/config/mumudvb
 }
