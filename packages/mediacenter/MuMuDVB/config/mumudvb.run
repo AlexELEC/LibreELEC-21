@@ -1,11 +1,15 @@
 #!/bin/sh
 
+DVB_CARD=$1
+DVB_FEND=$2
+CONFIG=$3
+
 MAX_TIME=30
-CONF_FILE="/storage/.config/mumudvb/Kyiv-t2.conf"
-FRONT_END="/dev/dvb/adapter0/frontend1"
+CONF_FILE="/storage/.config/mumudvb/${CONFIG}"
+DVB_DEVICE="/dev/dvb/adapter${DVB_CARD}/frontend${DVB_FEND}"
 
 for i in `seq 1 $MAX_TIME` ; do
-    [ -e $FRONT_END ] && break
+    [ -e $DVB_DEVICE ] && break
     sleep 1
 done
 

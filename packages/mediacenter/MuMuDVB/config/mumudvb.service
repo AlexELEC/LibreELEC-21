@@ -4,7 +4,7 @@ After=network-online.target
 Before=tvlink.service
 
 [Service]
-ExecStart=/storage/.config/mumudvb/mumudvb.run
+ExecStart=/storage/.config/mumudvb/mumudvb.run 0 1 "Kyiv-t2.conf"
 ExecStop=/bin/kill -TERM $MAINPID
 Restart=always
 RestartSec=3
