@@ -16,6 +16,7 @@ if [ ! -f /opt/bin/opkg ]; then
   /bin/sh $INSTALL
   rm -f $INSTALL
   sed -i '3i. /opt/etc/profile' /opt/etc/init.d/rc.unslung
+  sed -i '35i\    \sleep 2' /opt/etc/init.d/rc.func
   echo ""
   read -p "Would you like to reboot now to finish installation (recommended) [y/N]? " choice
   case "$choice" in
