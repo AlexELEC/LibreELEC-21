@@ -64,31 +64,10 @@ else
   GIT_HASH=$(git rev-parse HEAD)
 fi
 
-if [ "${LIBREELEC_VERSION}" = "devel" ]; then
-  GIT_ABBREV=${GIT_HASH:0:7}
-  DEVEL_VERSION=${LIBREELEC_VERSION}
-  case "${BUILD_PERIODIC}" in
-    nightly) LIBREELEC_VERSION=nightly-$(date +%Y%m%d)-${GIT_ABBREV};;
-    daily)   LIBREELEC_VERSION=daily-$(date +%Y%j)-${GIT_ABBREV};;
-    weekly)  LIBREELEC_VERSION=weekly-$(date +%G%V)-${GIT_ABBREV};;
-    monthly) LIBREELEC_VERSION=monthly-$(date +%Y%m)-${GIT_ABBREV};;
-    *)       LIBREELEC_VERSION=devel-$(date +%Y%m%d%H%M%S)-${GIT_ABBREV};;
-  esac
-fi
-
 # Get origin url, fix git:// and git@github.com: urls if necessary
 ORIGIN_URL="$(git remote -v | awk '$1 == "origin" { print $2 }' | head -1 | sed -e 's#\.git$##' -e 's#^git:#https:#' -e 's#^git@github\.com:#https://github.com/#' -e 's#://.*@#://#')"
 
-[ "${BUILDER_NAME,,}" = "official" ] && BUILDER_NAME=
-if [ "${OFFICIAL}" = "yes" ]; then
-  LIBREELEC_BUILD="official"
-else
-  if [ -n "${BUILDER_NAME}" ]; then
-    LIBREELEC_BUILD="${BUILDER_NAME}"
-  else
-    LIBREELEC_BUILD="community"
-  fi
-fi
+LIBREELEC_BUILD="ae-fork"
 
 if [ -n "${CUSTOM_VERSION}" ]; then
   LIBREELEC_VERSION="${CUSTOM_VERSION}"
@@ -318,11 +297,6 @@ if [ "${1}" = "release" -o "${1}" = "mkimage" -o "${1}" = "noobs" ]; then
   # Create release tarball
   tar cf ${TARGET_IMG}/${IMAGE_NAME}.tar -C target ${IMAGE_NAME}
 
-  # Create sha256 checksum of tarball
-  ( cd ${TARGET_IMG}
-    sha256sum ${IMAGE_NAME}.tar > ${IMAGE_NAME}.tar.sha256
-  )
-
   # Create image files if requested
   if [[ ( "${1}" = "noobs" || "${1}" = "mkimage" ) && -n "${BOOTLOADER}" ]]; then
     UUID_SYSTEM="$(date '+%d%m')-$(date '+%M%S')"
@@ -357,134 +331,8 @@ if [ "${1}" = "release" -o "${1}" = "mkimage" -o "${1}" = "noobs" ]; then
   # Cleanup release dir
   rm -rf ${RELEASE_DIR}
 
-  if [ "${1}" = "noobs" ]; then
-    echo "Creating \"${1}\" release tarball..."
-
-    RELEASE_DIR="${TARGET_IMG}/${IMAGE_NAME}-${1}"
-
-    # eg. LibreELEC_RPi, LibreELEC_RPi2 etc.
-    NOOBS_DISTRO="${DISTRONAME}_${DEVICE:-${PROJECT}}"
-
-    # Create release dir
-    mkdir -p ${RELEASE_DIR}/${NOOBS_DISTRO}
-
-    if [ -f ${DISTRO_DIR}/${DISTRO}/${DISTRONAME}_40x40.png ]; then
-      cp -PR ${DISTRO_DIR}/${DISTRO}/${DISTRONAME}_40x40.png ${RELEASE_DIR}/${NOOBS_DISTRO}/${NOOBS_DISTRO}.png
-    else
-      cp -PR ${DISTRO_DIR}/${DISTRO}/${DISTRONAME}.png ${RELEASE_DIR}/${NOOBS_DISTRO}/${NOOBS_DISTRO}.png
-    fi
-    cp -PR ${ROOT}/config/noobs/os.json ${RELEASE_DIR}/${NOOBS_DISTRO}
-    cp -PR ${ROOT}/config/noobs/partition_setup.sh ${RELEASE_DIR}/${NOOBS_DISTRO}
-    cp -PR ${ROOT}/config/noobs/partitions.json ${RELEASE_DIR}/${NOOBS_DISTRO}
-    if [ -d ${DISTRO_DIR}/${DISTRO}/noobs/marketing ]; then
-      tar cf ${RELEASE_DIR}/${NOOBS_DISTRO}/marketing.tar -C ${DISTRO_DIR}/${DISTRO}/noobs/marketing .
-    else
-      tar cf ${RELEASE_DIR}/${NOOBS_DISTRO}/marketing.tar -C ${ROOT}/config/noobs/marketing .
-    fi
-    cp ${ROOT}/README* ${RELEASE_DIR}/${NOOBS_DISTRO}
-    cp ${ROOT}/CHANGELOG ${RELEASE_DIR}/${NOOBS_DISTRO}/release_notes.txt
-
-    if [ -n "${NOOBS_HEX}" ]; then
-      sed -e "s%@NOOBS_HEX@%${NOOBS_HEX}%g" \
-          -i ${RELEASE_DIR}/${NOOBS_DISTRO}/os.json
-    else
-      sed -e "/@NOOBS_HEX@/d" \
-          -i ${RELEASE_DIR}/${NOOBS_DISTRO}/os.json
-    fi
-
-    sed -e "s%@DISTRONAME@%${DISTRONAME}%g" \
-        -e "s%@PROJECT@%${DEVICE:-${PROJECT}}%g" \
-        -e "s%@LIBREELEC_VERSION@%${LIBREELEC_VERSION}%g" \
-        -e "s%@RELEASE_DATE@%$(date +%F)%g" \
-        -e "s%@KERNEL_VERSION@%$(kernel_version)%g" \
-        -e "s%@DESCRIPTION@%${DESCRIPTION}%g" \
-        -e "s%@ROOT_PASSWORD@%${ROOT_PASSWORD}%g" \
-        -e "s%@NOOBS_SUPPORTED_MODELS@%${NOOBS_SUPPORTED_MODELS}%g" \
-        -i ${RELEASE_DIR}/${NOOBS_DISTRO}/os.json
-
-    sed -e "s%@DISTRONAME@%${DISTRONAME}%g" \
-        -e "s%@PROJECT@%${DEVICE:-${PROJECT}}%g" \
-        -e "s%@SYSTEM_SIZE@%${SYSTEM_SIZE}%g" \
-        -i ${RELEASE_DIR}/${NOOBS_DISTRO}/partitions.json
-
-    sed -e "s%@EXTRA_CMDLINE@%${EXTRA_CMDLINE}%g" \
-        -i ${RELEASE_DIR}/${NOOBS_DISTRO}/partition_setup.sh
-
-    # Create System dir
-    mkdir -p ${RELEASE_DIR}/${NOOBS_DISTRO}/System
-
-    # Copy Bootloader
-    cp -PR ${INSTALL}/usr/share/bootloader/config.txt ${RELEASE_DIR}/${NOOBS_DISTRO}/System/
-    for distro in "${INSTALL}/usr/share/bootloader/distroconfig"*.txt ; do
-      if [ -f "${distro}" ]; then
-        cp -PR "${distro}" ${RELEASE_DIR}/${NOOBS_DISTRO}/System/
-      fi
-    done
-    cp -PR ${INSTALL}/usr/share/bootloader/LICENCE* ${RELEASE_DIR}/${NOOBS_DISTRO}/System/
-    for f in bootcode.bin fixup.dat start.elf ; do
-      if [ -f "${INSTALL}/usr/share/bootloader/$f" ]; then
-        cp -PR "${INSTALL}/usr/share/bootloader/$f" "${RELEASE_DIR}/${NOOBS_DISTRO}/System/"
-      fi
-    done
-
-    # Copy system files
-    cp ${TARGET_IMG}/${IMAGE_NAME}.system ${RELEASE_DIR}/${NOOBS_DISTRO}/System/SYSTEM
-    cp ${TARGET_IMG}/${IMAGE_NAME}.kernel ${RELEASE_DIR}/${NOOBS_DISTRO}/System/kernel.img
-
-    for dtb in ${INSTALL}/usr/share/bootloader/*.dtb; do
-      if [ -f ${dtb} ]; then
-        cp -PR ${dtb} ${RELEASE_DIR}/${NOOBS_DISTRO}/System
-      fi
-    done
-
-    for overlay in ${INSTALL}/usr/share/bootloader/overlays/*; do
-      if [ -f ${overlay} ]; then
-        mkdir -p ${RELEASE_DIR}/${NOOBS_DISTRO}/System/overlays
-        cp -PR ${overlay} ${RELEASE_DIR}/${NOOBS_DISTRO}/System/overlays
-      fi
-    done
-
-    # Create md5sum's
-    ( cd ${RELEASE_DIR}/${NOOBS_DISTRO}/System;
-      md5sum -t SYSTEM > SYSTEM.md5;
-      md5sum -t kernel.img > kernel.img.md5;
-    )
-
-    # Copy additional files
-    mkdir -p ${RELEASE_DIR}/${NOOBS_DISTRO}/System/licenses
-    cp ${ROOT}/licenses/* ${RELEASE_DIR}/${NOOBS_DISTRO}/System/licenses
-
-    # Create Storage dir
-    mkdir -p ${RELEASE_DIR}/${NOOBS_DISTRO}/Storage
-
-    # Remove any previously created release tarball
-    rm -rf ${RELEASE_DIR}/${NOOBS_DISTRO}/System.tar.xz
-    rm -rf ${RELEASE_DIR}/${NOOBS_DISTRO}/Storage.tar.xz
-
-    # Create filesystem tarballs
-    ${TOOLCHAIN}/bin/fakeroot tar cJf ${RELEASE_DIR}/${NOOBS_DISTRO}/System.tar.xz -C ${RELEASE_DIR}/${NOOBS_DISTRO}/System/ .
-    ${TOOLCHAIN}/bin/fakeroot tar cJf ${RELEASE_DIR}/${NOOBS_DISTRO}/Storage.tar.xz -C ${RELEASE_DIR}/${NOOBS_DISTRO}/Storage/ .
-
-    # Remove filesystem dirs
-    rm -rf ${RELEASE_DIR}/${NOOBS_DISTRO}/System
-    rm -rf ${RELEASE_DIR}/${NOOBS_DISTRO}/Storage
-
-    # Remove any previously created release tarball
-    rm -rf ${TARGET_IMG}/${IMAGE_NAME}-${1}.tar
-
-    # Create release tarball
-    tar cf ${TARGET_IMG}/${IMAGE_NAME}-${1}.tar -C ${TARGET_IMG} ${IMAGE_NAME}-${1}
-
-    # Create sha256 checksum of tarball
-    ( cd ${TARGET_IMG}
-      sha256sum ${IMAGE_NAME}-${1}.tar > ${IMAGE_NAME}-${1}.tar.sha256
-    )
-  fi
-
-  if [ -d ${RELEASE_DIR} ]; then
-    # Cleanup release dir
-    rm -rf ${RELEASE_DIR}
-  fi
+  # Cleanup files
+  rm -rf ${TARGET_IMG}/${IMAGE_NAME}.system ${TARGET_IMG}/${IMAGE_NAME}.kernel
 fi
 
 if [ -n "$(ls -1 ${BUILD}/qa_checks/ 2>/dev/null)" ]; then

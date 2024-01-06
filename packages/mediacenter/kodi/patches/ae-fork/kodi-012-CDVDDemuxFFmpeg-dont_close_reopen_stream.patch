@@ -1,0 +1,31 @@
+From afa95885addaf27e00077879a511bef8a3f186ce Mon Sep 17 00:00:00 2001
+From: tanio99 <tanio99@wolke7.net>
+Date: Fri, 3 Apr 2020 16:06:31 +0200
+Subject: [PATCH] CDVDDemuxFFmpeg: don't close/reopen stream
+
+---
+ xbmc/cores/VideoPlayer/DVDDemuxers/DVDDemuxFFmpeg.cpp | 11 -----------
+ 1 file changed, 11 deletions(-)
+
+diff --git a/xbmc/cores/VideoPlayer/DVDDemuxers/DVDDemuxFFmpeg.cpp b/xbmc/cores/VideoPlayer/DVDDemuxers/DVDDemuxFFmpeg.cpp
+index a3fe99e53b..6b7e568773 100644
+--- a/xbmc/cores/VideoPlayer/DVDDemuxers/DVDDemuxFFmpeg.cpp
++++ b/xbmc/cores/VideoPlayer/DVDDemuxers/DVDDemuxFFmpeg.cpp
+@@ -671,17 +671,6 @@ bool CDVDDemuxFFmpeg::Open(const std::shared_ptr<CDVDInputStream>& pInput, bool
+   m_startTime = 0;
+   m_seekStream = -1;
+ 
+-  if (m_checkTransportStream && m_streaminfo)
+-  {
+-    int64_t duration = m_pFormatContext->duration;
+-    std::shared_ptr<CDVDInputStream> pInputStream = m_pInput;
+-    Dispose();
+-    m_reopen = true;
+-    if (!Open(pInputStream, false))
+-      return false;
+-    m_pFormatContext->duration = duration;
+-  }
+-
+   return true;
+ }
+ 
