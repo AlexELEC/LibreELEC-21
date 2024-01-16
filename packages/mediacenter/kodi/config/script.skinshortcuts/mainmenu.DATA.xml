@@ -1,0 +1,43 @@
+<shortcuts>
+	<shortcut>
+		<defaultID>settings</defaultID>
+		<label>13000</label>
+		<label2 />
+		<icon>special://skin/extras/icons/DefaultAddonService.png</icon>
+		<thumb />
+		<action>ActivateWindow(Settings)</action>
+		</shortcut>
+	<shortcut>
+		<defaultID>videos</defaultID>
+		<label>3</label>
+		<label2>Custom item</label2>
+		<icon>special://skin/extras/icons/DefaultVideo.png</icon>
+		<thumb />
+		<action>ActivateWindow(Videos,Addons,return)</action>
+		</shortcut>
+	<shortcut>
+		<defaultID>livetv</defaultID>
+		<label>$SKIN[31502|skin.aeon.nox.silvo.ae|ТВ]</label>
+		<label2 />
+		<icon>special://skin/extras/icons/DefaultAddonPVRClient.png</icon>
+		<thumb />
+		<action>ActivateWindow(TVChannels)</action>
+		</shortcut>
+	<shortcut>
+		<defaultID>favourites</defaultID>
+		<label>1036</label>
+		<label2 />
+		<icon>special://skin/extras/icons/Favorites.png</icon>
+		<thumb />
+		<action>ActivateWindow(Favourites)</action>
+		</shortcut>
+	<shortcut>
+		<defaultID>playdisc</defaultID>
+		<label>$SKIN[31958|skin.aeon.nox.silvo.ae|ВОСПРОИЗВЕСТИ ДИСК]</label>
+		<label2 />
+		<icon>special://skin/extras/icons/Disc.png</icon>
+		<thumb />
+		<action>PlayDisc</action>
+		<visible>System.HasMediaDVD</visible>
+		</shortcut>
+	</shortcuts>

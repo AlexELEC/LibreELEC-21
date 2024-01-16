@@ -1,0 +1,64 @@
+#
+#   Kodi learn remote map file for "remote-learn" command
+#
+#   Use that map with the new learn+map mode
+#   to quickly produce a basic map for KODI
+#   corresponding to your remote
+#
+#   hid-remote --list-devices --lookup-id
+#
+#   remote-learn
+#
+#   hid-remote --lookup-id --learn \
+#              --manufacturer 'MANUFACTURER' \
+#              --product 'PRODUCT' \
+#              --map /storage/.config/hid_remote/kodi-learn.map > /storage/.config/hid_remote/remote.map
+#
+#
+00:KEY_S        # Power
+00:KEY_PRINT    # Printscreen
+00:KEY_X        # Stop
+00:KEY_PLAY     # Play
+00:KEY_SPACE    # Play/Pause
+00:KEY_R        # Rewind
+00:KEY_F        # FastForward
+00:KEY_COMMA    # SkipPrevious
+00:KEY_DOT      # SkipNext
+00:KEY_E        # TVGuide
+00:KEY_TAB      # FullScreen
+00:KEY_O        # PlayerProcessInfo
+00:KEY_C        # ContextMenu
+00:KEY_ESC      # PreviousMenu
+00:KEY_I        # Info
+00:KEY_HOMEPAGE # FirstPage (Home)
+00:KEY_UP
+00:KEY_LEFT
+00:KEY_RIGHT
+00:KEY_DOWN
+00:KEY_ENTER
+00:KEY_VOLUMEUP
+00:KEY_VOLUMEDOWN
+00:KEY_MUTE
+00:KEY_PAGEUP
+00:KEY_PAGEDOWN
+00:KEY_Z        # Zoom
+00:KEY_F5       # Favourites
+00:KEY_A        # AudioNextLanguage
+00:KEY_1
+00:KEY_2
+00:KEY_3
+00:KEY_4
+00:KEY_5
+00:KEY_6
+00:KEY_7
+00:KEY_8
+00:KEY_9
+00:KEY_0
+00:KEY_END
+00:KEY_F11      # HDRToggle
+00:KEY_BACKSPACE
+00:KEY_T        # ShowSubtitles
+00:KEY_F1       # Red
+00:KEY_F2       # Green
+00:KEY_F3       # Yellow
+00:KEY_F4       # Blue

@@ -108,13 +108,13 @@ so, when shutdown/reboot is requested:
    const std::string& CurrentFile();
    CFileItem& CurrentFileItem();
 @@ -251,6 +252,7 @@ private:
-   unsigned int m_ProcessedExternalCalls = 0;      /*!< counts calls which are processed during one "door open" cycle in FrameMove */
-   unsigned int m_ProcessedExternalDecay = 0;      /*!< counts to close door after a few frames of no python activity */
    int m_ExitCode{EXITCODE_QUIT};
-+  bool m_ExitCodeSet = false;
    std::shared_ptr<CFileItem> m_itemCurrentFile; //!< Currently playing file
    CEvent m_playerEvent;
++  bool m_ExitCodeSet = false;
  };
+ 
+ XBMC_GLOBAL_REF(CApplication,g_application);
 --- a/xbmc/platform/linux/powermanagement/LogindUPowerSyscall.cpp
 +++ b/xbmc/platform/linux/powermanagement/LogindUPowerSyscall.cpp
 @@ -79,8 +79,6 @@ CLogindUPowerSyscall::~CLogindUPowerSysc
