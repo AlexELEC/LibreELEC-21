@@ -1,0 +1,84 @@
+diff -Naurp LibreELEC-settings/resources/lib/defaults.py LibreELEC-settings-patch/resources/lib/defaults.py
+--- LibreELEC-settings/resources/lib/defaults.py	2023-10-30 08:35:04.000000000 +0000
++++ LibreELEC-settings-patch/resources/lib/defaults.py	2023-10-30 09:26:11.000000000 +0000
+@@ -48,10 +48,10 @@ services = {
+     'SAMBA_SMDB': '/usr/sbin/smbd',
+     'D_SAMBA_WORKGROUP': 'WORKGROUP',
+     'D_SAMBA_SECURE': '0',
+-    'D_SAMBA_USERNAME': 'libreelec',
+-    'D_SAMBA_PASSWORD': 'libreelec',
+-    'D_SAMBA_MINPROTOCOL': 'SMB2',
+-    'D_SAMBA_MAXPROTOCOL': 'SMB3',
++    'D_SAMBA_USERNAME': 'mcpc',
++    'D_SAMBA_PASSWORD': 'mcpc',
++    'D_SAMBA_MINPROTOCOL': 'SMB1',
++    'D_SAMBA_MAXPROTOCOL': 'SMB1',
+     'D_SAMBA_AUTOSHARE': '1',
+     'SSH_DAEMON': '/usr/sbin/sshd',
+     'OPT_SSH_NOPASSWD': "-o 'PasswordAuthentication no'",
+@@ -97,4 +97,5 @@ _services = {
+     'crond': ['cron.service'],
+     'iptables': ['iptables.service'],
+     'tvlink': ['tvlink.service'],
++    'hid-remote': ['hid-remote.service'],
+     }
+diff -Naurp LibreELEC-settings/resources/lib/modules/services.py LibreELEC-settings-patch/resources/lib/modules/services.py
+--- LibreELEC-settings/resources/lib/modules/services.py	2023-10-30 08:36:23.000000000 +0000
++++ LibreELEC-settings-patch/resources/lib/modules/services.py	2023-10-30 09:32:48.000000000 +0000
+@@ -280,6 +280,19 @@ class services(modules.Module):
+                         },
+                     },
+                 },
++            'hid-remote': {
++                'order': 5,
++                'name': 43010,
++                'not_supported': [],
++                'settings': {'hidremote_autostart': {
++                    'order': 1,
++                    'name': 43011,
++                    'value': None,
++                    'action': 'initialize_hidremote',
++                    'type': 'bool',
++                    'InfoText': 4311,
++                    }},
++                },
+             }
+ 
+     @log.log_function()
+@@ -290,6 +303,7 @@ class services(modules.Module):
+         self.initialize_avahi(service=1)
+         self.initialize_cron(service=1)
+         self.initialize_bluetooth(service=1)
++        self.initialize_hidremote(service=1)
+ 
+     @log.log_function()
+     def do_init(self):
+@@ -365,6 +379,8 @@ class services(modules.Module):
+                 self.struct['bluez']['settings']['idle_timeout']['value'] = oe.read_setting('bluetooth', 'idle_timeout')
+             else:
+                 self.struct['bluez']['hidden'] = 'true'
++        # HID-REMOTE
++        self.struct['hid-remote']['settings']['hidremote_autostart']['value'] = oe.get_service_state('hid-remote')
+ 
+     @log.log_function()
+     def initialize_samba(self, **kwargs):
+@@ -439,6 +455,19 @@ class services(modules.Module):
+         oe.set_service('crond', options, state)
+ 
+     @log.log_function()
++    def initialize_hidremote(self, **kwargs):
++        if 'listItem' in kwargs:
++            self.set_value(kwargs['listItem'])
++        options = {}
++        if self.struct['hid-remote']['settings']['hidremote_autostart']['value'] == '1':
++            subprocess.call(['/usr/bin/systemctl', 'stop', 'eventlircd.service'], close_fds=True)
++            state = 1
++        else:
++            subprocess.call(['/usr/bin/systemctl', 'start', 'eventlircd.service'], close_fds=True)
++            state = 0
++        oe.set_service('hid-remote', options, state)
++
++    @log.log_function()
+     def initialize_bluetooth(self, **kwargs):
+         if 'listItem' in kwargs:
+             self.set_value(kwargs['listItem'])

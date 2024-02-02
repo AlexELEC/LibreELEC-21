@@ -15,7 +15,7 @@
         #
         # x86-64-v3    e.g. AMD CPU - Bulldozer GEN4 - (bdver4)
         #                   Intel CPU - Haswell - (haswell)
-        TARGET_CPU="x86-64"
+        TARGET_CPU="x86-64-v2"
         ;;
     esac
 
@@ -72,3 +72,7 @@
 
   # Default size of the ova image, in MB, eg. 4096
     OVA_SIZE="4096"
+
+  # Entware support
+    ENTWARE_SUPPORT="yes"
+    ENTWARE_ARCH="x64-k3.2"

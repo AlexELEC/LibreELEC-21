@@ -1,0 +1,14 @@
+[Unit]
+Description=Simple webserver httpd
+After=network-online.target
+Before=mumudvb.service
+
+[Service]
+ExecStart=/usr/sbin/httpd -f -c /storage/.config/mumudvb/httpd.conf
+ExecStop=/bin/kill -TERM $MAINPID
+Restart=always
+RestartSec=3
+StartLimitInterval=0
+
+[Install]
+WantedBy=multi-user.target

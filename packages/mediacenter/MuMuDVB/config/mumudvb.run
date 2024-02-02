@@ -1,0 +1,17 @@
+#!/bin/sh
+
+DVB_CARD=$1
+DVB_FEND=$2
+CONFIG=$3
+
+MAX_TIME=30
+CONF_FILE="/storage/.config/mumudvb/${CONFIG}"
+DVB_DEVICE="/dev/dvb/adapter${DVB_CARD}/frontend${DVB_FEND}"
+
+for i in `seq 1 $MAX_TIME` ; do
+    [ -e $DVB_DEVICE ] && break
+    sleep 1
+done
+
+mkdir -p /var/run/mumudvb
+/usr/bin/mumudvb -d -c $CONF_FILE

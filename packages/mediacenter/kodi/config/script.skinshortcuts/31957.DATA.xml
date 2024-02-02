@@ -1,0 +1,26 @@
+<shortcuts>
+	<shortcut>
+		<defaultID>1037</defaultID>
+		<label>Видео</label>
+		<label2>Custom item</label2>
+		<icon>DefaultShortcut.png</icon>
+		<thumb />
+		<action>ActivateWindow(Videos,Addons,return)</action>
+	</shortcut>
+	<shortcut>
+		<defaultID>10040</defaultID>
+		<label>Дополнения</label>
+		<label2>Custom item</label2>
+		<icon>DefaultShortcut.png</icon>
+		<thumb />
+		<action>ActivateWindow(Addonbrowser)</action>
+	</shortcut>
+	<shortcut>
+		<defaultID>1043</defaultID>
+		<label>Программы</label>
+		<label2>Custom item</label2>
+		<icon>DefaultShortcut.png</icon>
+		<thumb />
+		<action>ActivateWindow(Programs,Addons,return)</action>
+	</shortcut>
+</shortcuts>
