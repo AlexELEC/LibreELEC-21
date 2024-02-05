@@ -18,5 +18,5 @@ PKG_IS_ADDON="yes"
 
 post_patch() {
   # set version
-  find ${PKG_BUILD} -name addon.xml.in -exec sed -i 's/version="21.2.0"/version="21.2.0.9"/g' {} \;
+  find ${PKG_BUILD} -name addon.xml.in -exec sed -i 's/version="21.3.2"/version="21.3.2.9"/g' {} \;
 }
