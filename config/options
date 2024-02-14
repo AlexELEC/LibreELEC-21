@@ -1,17 +1,3 @@
-# Do not build as root. Ever.
-if [[ "${EUID}" -eq 0 ]]; then
-  echo "Building as the root user is NOT supported. Use a regular user account for the build." 1>&2
-  exit 1
-fi
-
-# Spaces in paths are verboten
-if [[ ${PWD} =~ [[:space:]] ]]; then
-  echo "Current PWD: \"${PWD}\"" 1>&2
-  echo 1>&2
-  echo "Building in a folder that includes spaces is NOT supported. Use a folder without spaces." 1>&2
-  exit 1
-fi
-
 # set default language for buildsystem
 export LC_ALL=C
 
