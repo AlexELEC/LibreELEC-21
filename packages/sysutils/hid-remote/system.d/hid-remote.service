@@ -1,0 +1,16 @@
+[Unit]
+Description=HID remote mapper
+After=graphical.target
+Before=kodi.service
+ConditionPathExists=/storage/.cache/services/hid-remote.conf
+
+[Service]
+EnvironmentFile=-/storage/.config/hid_remote/device.conf
+ExecStart=/usr/bin/hid-remote --lookup-id --manufacturer $MANUFACTURER --product $PRODUCT --map /storage/.config/hid_remote/remote.map
+TimeoutStopSec=2
+Restart=always
+RestartSec=3
+StartLimitInterval=0
+
+[Install]
+WantedBy=kodi.target

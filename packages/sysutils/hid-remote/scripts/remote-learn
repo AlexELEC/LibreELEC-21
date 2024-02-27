@@ -1,0 +1,25 @@
+#!/bin/sh
+
+# SPDX-License-Identifier: GPL-2.0-or-later
+# Copyright (C) 2011-present Alex@ELEC (https://alexelec.tv)
+
+MAIN_DIR="/storage/.config/hid_remote"
+
+if [ -f "$MAIN_DIR/device.conf" ]; then
+  . $MAIN_DIR/device.conf
+  if [ "$MANUFACTURER" = "" -o "$PRODUCT" = "" ]; then
+    echo "ERROR: variables MANUFACTURER/PRODUCT not set in file device.conf"
+    exit 2
+  fi
+else
+  echo "ERROR: file device.conf not found"
+  exit 2
+fi
+
+/usr/bin/hid-remote --lookup-id --learn \
+                    --manufacturer "$MANUFACTURER" \
+                    --product "$PRODUCT" \
+                    --map $MAIN_DIR/sample/kodi-learn.map > $MAIN_DIR/remote.map
+
+echo "Done!"
+exit 0
