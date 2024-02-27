@@ -1,7 +1,7 @@
 diff -Naurp LibreELEC-settings/resources/lib/modules/updates.py LibreELEC-settings-patch/resources/lib/modules/updates.py
---- LibreELEC-settings/resources/lib/modules/updates.py	2023-11-11 20:46:56.000000000 +0000
+--- LibreELEC-settings/resources/lib/modules/updates.py	2024-02-23 10:12:41.000000000 +0000
 +++ LibreELEC-settings-patch/resources/lib/modules/updates.py	1970-01-01 00:00:00.000000000 +0000
-@@ -1,720 +0,0 @@
+@@ -1,706 +0,0 @@
 -# SPDX-License-Identifier: GPL-2.0-or-later
 -# Copyright (C) 2009-2013 Stephan Raue (stephan@openelec.tv)
 -# Copyright (C) 2013 Lutz Fiebach (lufie@openelec.tv)
@@ -151,7 +151,7 @@ diff -Naurp LibreELEC-settings/resources/lib/modules/updates.py LibreELEC-settin
 -                'bootloader': {
 -                    'name': 'dummy',
 -                    'value': '',
--                    'action': 'set_rpi_bootloader',
+-                    'action': 'update_rpi_firmware',
 -                    'type': 'bool',
 -                    'InfoText': 32025,
 -                    'order': 1,
@@ -159,7 +159,7 @@ diff -Naurp LibreELEC-settings/resources/lib/modules/updates.py LibreELEC-settin
 -                'vl805': {
 -                    'name': 32026,
 -                    'value': '',
--                    'action': 'set_rpi_vl805',
+-                    'action': 'update_rpi_firmware',
 -                    'type': 'bool',
 -                    'InfoText': 32027,
 -                    'order': 2,
@@ -311,16 +311,20 @@ diff -Naurp LibreELEC-settings/resources/lib/modules/updates.py LibreELEC-settin
 -        self.struct['update']['settings']['Channel']['values'] = self.get_channels()
 -        self.struct['update']['settings']['Build']['values'] = self.get_available_builds()
 -
--        # RPi4 EEPROM updating
--        if oe.RPI_CPU_VER == '3':
+-        # RPi4/RPi400/RPi5 EEPROM updating
+-        if os.path.isfile('/usr/bin/rpi-eeprom-update'):
 -            self.rpi_flashing_state = self.get_rpi_flashing_state()
+-            log.log(f'RPi flashing state: {self.rpi_flashing_state}', log.DEBUG)
 -            if self.rpi_flashing_state['incompatible']:
 -                self.struct['rpieeprom']['hidden'] = 'true'
 -            else:
--                self.struct['rpieeprom']['settings']['bootloader']['value'] = self.get_rpi_eeprom('BOOTLOADER')
+-                self.struct['rpieeprom']['settings']['bootloader']['value'] = 'true' if os.path.isfile('/flash/pieeprom.upd') else 'false'
 -                self.struct['rpieeprom']['settings']['bootloader']['name'] = f"{oe._(32024)} ({self.rpi_flashing_state['bootloader']['state']})"
--                self.struct['rpieeprom']['settings']['vl805']['value'] = self.get_rpi_eeprom('VL805')
--                self.struct['rpieeprom']['settings']['vl805']['name'] = f"{oe._(32026)} ({self.rpi_flashing_state['vl805']['state']})"
+-                if oe.DEVICE == 'RPi4':
+-                    self.struct['rpieeprom']['settings']['vl805']['value'] = 'true' if os.path.isfile('/flash/vl805.bin') else 'false'
+-                    self.struct['rpieeprom']['settings']['vl805']['name'] = f"{oe._(32026)} ({self.rpi_flashing_state['vl805']['state']})"
+-                else:
+-                    self.struct['rpieeprom']['settings']['vl805']['hidden'] = 'true'
 -        else:
 -            self.struct['rpieeprom']['hidden'] = 'true'
 -
@@ -597,6 +601,7 @@ diff -Naurp LibreELEC-settings/resources/lib/modules/updates.py LibreELEC-settin
 -            else:
 -                delattr(self, 'update_in_progress')
 -
+-
 -    def get_rpi_flashing_state(self):
 -        try:
 -            log.log('enter_function', log.DEBUG)
@@ -614,7 +619,7 @@ diff -Naurp LibreELEC-settings/resources/lib/modules/updates.py LibreELEC-settin
 -                    }
 -
 -            with tempfile.NamedTemporaryFile(mode='r', delete=True) as machine_out:
--                console_output = os_tools.execute(f'/usr/bin/.rpi-eeprom-update.real -j -m "{machine_out.name}"', get_result=True).split('\n')
+-                console_output = os_tools.execute(f'/usr/bin/.rpi-eeprom-update.real -j -m "{machine_out.name}"', get_result=True, output_err_msg=False).split('\n')
 -                if os.path.getsize(machine_out.name) != 0:
 -                    state['incompatible'] = False
 -                    jdata = json.load(machine_out)
@@ -652,47 +657,28 @@ diff -Naurp LibreELEC-settings/resources/lib/modules/updates.py LibreELEC-settin
 -            log.log(f'ERROR: ({repr(e)})')
 -            return {'incompatible': True}
 -
--    @log.log_function()
--    def get_rpi_eeprom(self, device):
--        values = []
--        if os.path.exists(self.RPI_FLASHING_TRIGGER):
--            with open(self.RPI_FLASHING_TRIGGER, 'r') as trigger:
--                values = trigger.read().split('\n')
--        log.log(f'values: {values}', log.DEBUG)
--        return 'true' if (f'{device}="yes"') in values else 'false'
 -
 -    @log.log_function()
--    def set_rpi_eeprom(self):
--        bootloader = (self.struct['rpieeprom']['settings']['bootloader']['value'] == 'true')
--        vl805 = (self.struct['rpieeprom']['settings']['vl805']['value'] == 'true')
--        log.log(f'states: [{bootloader}], [{vl805}]', log.DEBUG)
--        if bootloader or vl805:
--            values = []
--            values.append('BOOTLOADER="%s"' % ('yes' if bootloader else 'no'))
--            values.append('VL805="%s"' % ('yes' if vl805 else 'no'))
--            with open(self.RPI_FLASHING_TRIGGER, 'w') as trigger:
--                trigger.write('\n'.join(values))
--        else:
--            if os.path.exists(self.RPI_FLASHING_TRIGGER):
--                os.remove(self.RPI_FLASHING_TRIGGER)
--
--    @log.log_function()
--    def set_rpi_bootloader(self, listItem):
+-    def update_rpi_firmware(self, listItem):
 -        value = 'false'
--        if listItem.getProperty('value') == 'true':
--            if xbmcgui.Dialog().yesno('Update RPi Bootloader', f'{oe._(32023)}\n\n{oe._(32326)}'):
--                value = 'true'
+-        if xbmcgui.Dialog().yesno('Update RPi Firmware', f'{oe._(32023)}\n\n{oe._(32326)}'):
+-            # available update is newer than installed version
+-            if self.rpi_flashing_state[listItem.getProperty('entry')]['current'] < self.rpi_flashing_state[listItem.getProperty('entry')]['latest']:
+-                update_result = os_tools.execute(f'/usr/bin/rpi-eeprom-update -A {listItem.getProperty("entry")}', get_result=True)
+-                log.log(f'rpi-eeprom-update result: {update_result}', log.DEBUG)
+-                if update_result:
+-                    xbmcgui.Dialog().ok('Update RPi Firmware', 'Please restart to complete the update.')
+-                    value = 'true'
+-            else:
+-                xbmcgui.Dialog().ok('Update RPi Firmware', 'Firmware is up to date.')
+-        # user chose no but bootloader update already queued
+-        elif listItem.getProperty('entry') == 'bootloader' and os.path.isfile('/flash/pieeprom.upd'):
+-            value = 'true'
+-        # user chose no but vl805 update already queued
+-        elif listItem.getProperty('entry') == 'vl805' and os.path.isfile('/flash/vl805.bin'):
+-            value = 'true'
 -        self.struct[listItem.getProperty('category')]['settings'][listItem.getProperty('entry')]['value'] = value
--        self.set_rpi_eeprom()
 -
--    @log.log_function()
--    def set_rpi_vl805(self, listItem):
--        value = 'false'
--        if listItem.getProperty('value') == 'true':
--            if xbmcgui.Dialog().yesno('Update RPi USB3 Firmware', f'{oe._(32023)}\n\n{oe._(32326)}'):
--                value = 'true'
--        self.struct[listItem.getProperty('category')]['settings'][listItem.getProperty('entry')]['value'] = value
--        self.set_rpi_eeprom()
 -
 -class updateThread(threading.Thread):
 -
