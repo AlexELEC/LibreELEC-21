@@ -1,5 +1,5 @@
 diff -Naurp LibreELEC-settings/resources/lib/modules/updates.py LibreELEC-settings-patch/resources/lib/modules/updates.py
---- LibreELEC-settings/resources/lib/modules/updates.py	2024-02-23 10:12:41.000000000 +0000
+--- LibreELEC-settings/resources/lib/modules/updates.py	2024-03-07 11:50:50.000000000 +0000
 +++ LibreELEC-settings-patch/resources/lib/modules/updates.py	1970-01-01 00:00:00.000000000 +0000
 @@ -1,706 +0,0 @@
 -# SPDX-License-Identifier: GPL-2.0-or-later
@@ -661,13 +661,13 @@ diff -Naurp LibreELEC-settings/resources/lib/modules/updates.py LibreELEC-settin
 -    @log.log_function()
 -    def update_rpi_firmware(self, listItem):
 -        value = 'false'
--        if xbmcgui.Dialog().yesno('Update RPi Firmware', f'{oe._(32023)}\n\n{oe._(32326)}'):
+-        if xbmcgui.Dialog().yesno(oe._(32022), f'{oe._(32023)}\n\n{oe._(32326)}'):
 -            # available update is newer than installed version
 -            if self.rpi_flashing_state[listItem.getProperty('entry')]['current'] < self.rpi_flashing_state[listItem.getProperty('entry')]['latest']:
 -                update_result = os_tools.execute(f'/usr/bin/rpi-eeprom-update -A {listItem.getProperty("entry")}', get_result=True)
 -                log.log(f'rpi-eeprom-update result: {update_result}', log.DEBUG)
 -                if update_result:
--                    xbmcgui.Dialog().ok('Update RPi Firmware', 'Please restart to complete the update.')
+-                    xbmcgui.Dialog().ok(oe._(32022), oe._(32023))
 -                    value = 'true'
 -            else:
 -                xbmcgui.Dialog().ok('Update RPi Firmware', 'Firmware is up to date.')

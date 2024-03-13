@@ -1,9 +1,9 @@
 diff -Naurp LibreELEC-settings/resources/language/resource.language.en_gb/strings.po LibreELEC-settings-patch/resources/language/resource.language.en_gb/strings.po
---- LibreELEC-settings/resources/language/resource.language.en_gb/strings.po	2023-06-03 13:27:20.000000000 +0000
-+++ LibreELEC-settings-patch/resources/language/resource.language.en_gb/strings.po	2023-10-30 09:41:15.000000000 +0000
-@@ -1083,3 +1083,42 @@ msgstr ""
- msgctxt "#32416"
- msgid "Reboot to apply changes."
+--- LibreELEC-settings/resources/language/resource.language.en_gb/strings.po	2024-03-07 11:50:50.000000000 +0000
++++ LibreELEC-settings-patch/resources/language/resource.language.en_gb/strings.po	2024-03-13 07:32:58.000000000 +0000
+@@ -1095,3 +1095,42 @@ msgstr ""
+ msgctxt "#32419"
+ msgid "Error sending log files. Please try again."
  msgstr ""
 +
 +
@@ -45,12 +45,12 @@ diff -Naurp LibreELEC-settings/resources/language/resource.language.en_gb/string
 +msgid "HID-Remote (hid_mapper) daemon to map HID events to key events."
 +msgstr ""
 diff -Naurp LibreELEC-settings/resources/language/resource.language.ru_ru/strings.po LibreELEC-settings-patch/resources/language/resource.language.ru_ru/strings.po
---- LibreELEC-settings/resources/language/resource.language.ru_ru/strings.po	2023-06-03 13:27:20.000000000 +0000
-+++ LibreELEC-settings-patch/resources/language/resource.language.ru_ru/strings.po	2023-10-30 09:43:03.000000000 +0000
-@@ -1105,3 +1105,42 @@ msgstr "Отключить ограни�
- msgctxt "#32416"
- msgid "Reboot to apply changes."
- msgstr "Перезагрузите для применения изменений."
+--- LibreELEC-settings/resources/language/resource.language.ru_ru/strings.po	2024-03-07 11:50:50.000000000 +0000
++++ LibreELEC-settings-patch/resources/language/resource.language.ru_ru/strings.po	2024-03-13 07:33:30.000000000 +0000
+@@ -1118,3 +1118,42 @@ msgstr ""
+ msgctxt "#32419"
+ msgid "Error sending log files. Please try again."
+ msgstr ""
 +
 +
 +########## TV Service #########
@@ -91,11 +91,11 @@ diff -Naurp LibreELEC-settings/resources/language/resource.language.ru_ru/string
 +msgid "HID-Remote (hid_mapper) daemon to map HID events to key events."
 +msgstr "HID-Remote (hid_mapper) сервис для сопоставления событий HID с событиями клавиатуры."
 diff -Naurp LibreELEC-settings/resources/language/resource.language.uk_ua/strings.po LibreELEC-settings-patch/resources/language/resource.language.uk_ua/strings.po
---- LibreELEC-settings/resources/language/resource.language.uk_ua/strings.po	2023-06-03 13:27:20.000000000 +0000
-+++ LibreELEC-settings-patch/resources/language/resource.language.uk_ua/strings.po	2023-10-30 09:47:03.000000000 +0000
-@@ -1095,3 +1095,42 @@ msgstr ""
- msgctxt "#32416"
- msgid "Reboot to apply changes."
+--- LibreELEC-settings/resources/language/resource.language.uk_ua/strings.po	2024-03-07 11:50:50.000000000 +0000
++++ LibreELEC-settings-patch/resources/language/resource.language.uk_ua/strings.po	2024-03-13 07:33:58.000000000 +0000
+@@ -1107,3 +1107,42 @@ msgstr ""
+ msgctxt "#32419"
+ msgid "Error sending log files. Please try again."
  msgstr ""
 +
 +
