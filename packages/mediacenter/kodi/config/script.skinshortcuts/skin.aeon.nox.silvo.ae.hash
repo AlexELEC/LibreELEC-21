@@ -35,63 +35,31 @@
     ],
     [
         "::SKINVER::",
-        "7.9.7"
-    ],
-    [
-        "/storage/.kodi/addons/skin.aeon.nox.silvo.ae/shortcuts/overrides.xml",
-        "cca58122727befbef329582fd65a536a"
-    ],
-    [
-        "/storage/.kodi/addons/skin.aeon.nox.silvo.ae/shortcuts/mainmenu.DATA.xml",
-        "221b02570af0857b0d001fafcfb9d236"
-    ],
-    [
-        "/storage/.kodi/userdata/addon_data/script.skinshortcuts/skin.aeon.nox.silvo.ae.properties",
-        "2b88682a9d21a2f6cec428fc9e2875d3"
-    ],
-    [
-        "/storage/.kodi/addons/script.skinshortcuts/resources/shortcuts/settings.DATA.xml",
-        "e644f923a418932143ed842e4231cc0c"
-    ],
-    [
-        "/storage/.kodi/userdata/addon_data/script.skinshortcuts/31502.DATA.xml",
-        "ef142deb195737ba7b5daedd62108f03"
-    ],
-    [
-        "/storage/.kodi/userdata/addon_data/script.skinshortcuts/31958.DATA.xml",
-        "febfa78ff3be36181571a55dd7ca1304"
+        "9.99.4"
     ],
     [
         "/storage/.kodi/addons/script.skinshortcuts/resources/shortcuts/overrides.xml",
         "5d367b4cf434ffcb86069273d402dc28"
     ],
     [
-        "/storage/.kodi/addons/skin.aeon.nox.silvo.ae/16x9/script-skinshortcuts-includes.xml",
-        "5eba48845dbe306b91ad7f006eb78047"
-    ],
-    [
-        "/storage/.kodi/addons/skin.aeon.nox.silvo.ae/shortcuts/playdisc.DATA.xml",
-        "c44c3e67ba791781178206ae0d7d2d37"
-    ],
-    [
-        "/storage/.kodi/userdata/addon_data/script.skinshortcuts/videos.DATA.xml",
-        "0abd54ae1709c89abedd6a1cd61da426"
-    ],
-    [
-        "/storage/.kodi/addons/skin.aeon.nox.silvo.ae/shortcuts/settings.DATA.xml",
-        "6115c8cbc133ece28074944e42078f47"
+        "/storage/.kodi/addons/skin.aeon.nox.silvo.ae/shortcuts/mainmenu.DATA.xml",
+        "70aba69da648af8eb8fc6a4a1d7ad363"
     ],
     [
         "/storage/.kodi/userdata/addon_data/script.skinshortcuts/mainmenu.DATA.xml",
-        "a70ca5d30e9b2fe4823320938bff8641"
+        "8962282ad729f734538946bb98313dde"
     ],
     [
-        "/storage/.kodi/addons/script.skinshortcuts/resources/shortcuts/videos.DATA.xml",
-        "dc44f89b483d572c54e44410e2dfd674"
+        "/storage/.kodi/userdata/addon_data/script.skinshortcuts/13000.DATA.xml",
+        "fd602e99385340961015099cbe99a615"
     ],
     [
         "/storage/.kodi/addons/script.skinshortcuts/resources/shortcuts/livetv.DATA.xml",
         "fb7cefbdccd70e243187cce2cb0e385c"
+    ],
+    [
+        "/storage/.kodi/addons/script.skinshortcuts/resources/shortcuts/videos.DATA.xml",
+        "dc44f89b483d572c54e44410e2dfd674"
     ],
     [
         "/storage/.kodi/userdata/addon_data/script.skinshortcuts/1036.DATA.xml",
@@ -99,22 +67,58 @@
     ],
     [
         "/storage/.kodi/addons/skin.aeon.nox.silvo.ae/shortcuts/template.xml",
-        "9af0a30fd945568e8a13584aebc44457"
+        "b1f38cfa010da753194755343945f0f4"
     ],
     [
-        "/storage/.kodi/addons/skin.aeon.nox.silvo.ae/shortcuts/videos.DATA.xml",
-        "1783e1a991681f953a21921c0be2519f"
+        "/storage/.kodi/addons/skin.aeon.nox.silvo.ae/shortcuts/overrides.xml",
+        "8115464e8bf3172c3f4c739d7dcc9c8d"
     ],
     [
-        "/storage/.kodi/addons/script.skinshortcuts/resources/shortcuts/mainmenu.DATA.xml",
-        "8523f5b50afc14f67af449ca99ee21f8"
+        "/storage/.kodi/userdata/addon_data/script.skinshortcuts/videos.DATA.xml",
+        "e1446287792a51b1b56fe69201f953e5"
+    ],
+    [
+        "/storage/.kodi/userdata/addon_data/script.skinshortcuts/skin.aeon.nox.silvo.ae.properties",
+        "96016001eada8878e4aa93b0d0107928"
+    ],
+    [
+        "/storage/.kodi/addons/script.skinshortcuts/resources/shortcuts/settings.DATA.xml",
+        "e644f923a418932143ed842e4231cc0c"
+    ],
+    [
+        "/storage/.kodi/addons/skin.aeon.nox.silvo.ae/shortcuts/playdisc.DATA.xml",
+        "c44c3e67ba791781178206ae0d7d2d37"
+    ],
+    [
+        "/storage/.kodi/userdata/addon_data/script.skinshortcuts/31502.DATA.xml",
+        "e48810c829c3ac397378c76fe1e3e2a1"
+    ],
+    [
+        "/storage/.kodi/userdata/addon_data/script.skinshortcuts/31958.DATA.xml",
+        "acf50f800337fe9cff902ace2bc731f3"
+    ],
+    [
+        "/storage/.kodi/addons/skin.aeon.nox.silvo.ae/shortcuts/settings.DATA.xml",
+        "6115c8cbc133ece28074944e42078f47"
+    ],
+    [
+        "/storage/.kodi/addons/skin.aeon.nox.silvo.ae/shortcuts/buttonmenu.DATA.xml",
+        "ba1e01a0a620c3f9c2e4700685523040"
     ],
     [
         "/storage/.kodi/addons/skin.aeon.nox.silvo.ae/shortcuts/livetv.DATA.xml",
         "a75b3ce76253bdd15eebcdd691f0f479"
     ],
     [
-        "/storage/.kodi/userdata/addon_data/script.skinshortcuts/13000.DATA.xml",
-        "be8916f04c655a7bb89a04a0ba07408c"
+        "/storage/.kodi/addons/skin.aeon.nox.silvo.ae/shortcuts/videos.DATA.xml",
+        "1783e1a991681f953a21921c0be2519f"
+    ],
+    [
+        "/storage/.kodi/addons/skin.aeon.nox.silvo.ae/16x9/script-skinshortcuts-includes.xml",
+        "de907903312d10cd4a2fe0f7f7aabd0f"
+    ],
+    [
+        "/storage/.kodi/addons/script.skinshortcuts/resources/shortcuts/mainmenu.DATA.xml",
+        "8523f5b50afc14f67af449ca99ee21f8"
     ]
 ]
