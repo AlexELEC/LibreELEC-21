@@ -3,9 +3,9 @@
 # Copyright (C) 2011-present AlexELEC (https://alexelec.tv)
 
 PKG_NAME="pvr.tvlink"
-PKG_VERSION="2.3.0"
-PKG_SHA256="cd619d6cb9b056ca4195f8e4e022f081f0feab1f46b2f6dc81ccdff55415e748"
-PKG_REV="1"
+PKG_VERSION="2.4.0"
+PKG_SHA256="447a292698212d5d0deb6d5dad77dbf548a2dd28388f09c7b928aea687e83561"
+PKG_REV="2"
 PKG_ARCH="any"
 PKG_LICENSE="GPL"
 PKG_SITE="https://github.com/AlexELEC/pvr.tvlink-20"
