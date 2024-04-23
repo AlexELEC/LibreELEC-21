@@ -48,6 +48,6 @@ if [ "${MEDIACENTER}" = "kodi" ]; then
   fi
 
 # PVR TVLINK Client
-  PKG_DEPENDS_TARGET+=" inputstream.ffmpegdirect pvr.tvlink"
+  PKG_DEPENDS_TARGET+=" pvr.tvlink"
 
 fi
