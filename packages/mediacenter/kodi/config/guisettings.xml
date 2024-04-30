@@ -5,7 +5,6 @@
     <setting id="epg.pastdaystodisplay">2</setting>
     <setting id="epg.futuredaystodisplay">1</setting>
     <setting id="pvrplayback.enableradiords">false</setting>
-    <setting id="pvrplayback.fps">1</setting>
     <setting id="services.airplay">false</setting>
     <general>
         <settinglevel>3</settinglevel>
