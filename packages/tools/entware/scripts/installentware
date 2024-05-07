@@ -9,7 +9,7 @@ INSTALL="/storage/.config/generic.sh"
 [ ! -d /storage/.config/opt ] && mkdir -p /storage/.config/opt
 
 if [ ! -f /opt/bin/opkg ]; then
-  wget --no-check-certificate "https://mirrors.bfsu.edu.cn/entware/x64-k3.2/installer/generic.sh" -O $INSTALL
+  wget --no-check-certificate "https://mirrors.bfsu.edu.cn/entware/@ENTWARE_ARCH@/installer/generic.sh" -O $INSTALL
   chmod +x $INSTALL
   sed -e "s|http:\/\/bin.entware.net|https:\/\/mirrors.bfsu.edu.cn\/entware|g" -i $INSTALL
   sed -i '41ised -e "s|http:\/\/bin.entware.net|https:\/\/mirrors.bfsu.edu.cn\/entware|g" -i /opt/etc/opkg.conf' $INSTALL
