@@ -20,3 +20,7 @@
 
   # set the addon project
     ADDON_PROJECT="ARMv7"
+
+  # Entware support
+    ENTWARE_SUPPORT="yes"
+    ENTWARE_ARCH="armv7sf-k3.2"
