@@ -1,0 +1,16 @@
+#!/bin/sh
+
+# SPDX-License-Identifier: GPL-2.0-or-later
+# Copyright (C) 2011-present Alex@ELEC (https://alexelec.tv)
+
+# wait start TVLINK max 60 sec.
+TIMEOUT=60
+
+for i in $(seq 1 $TIMEOUT) ; do
+  if [ -e /run/tvlink ]; then
+    break
+  fi
+  sleep 1
+done
+
+exit 0
