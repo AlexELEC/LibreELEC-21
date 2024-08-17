@@ -1,0 +1,13 @@
+[Unit]
+Description=Kodi wait TVLINK service
+Before=kodi.service
+After=network-online.target graphical.target
+ConditionPathExists=/storage/.cache/services/tvlink.conf
+
+[Service]
+Type=oneshot
+ExecStart=/usr/lib/kodi/kodi-tvlink
+RemainAfterExit=yes
+
+[Install]
+WantedBy=kodi.service

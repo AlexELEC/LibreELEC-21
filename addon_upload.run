@@ -1,0 +1,9 @@
+#!/bin/bash
+
+# SPDX-License-Identifier: GPL-2.0-or-later
+# Copyright (C) 2011-present Alex@ELEC (https://alexelec.tv)
+
+REPO_TOOL="./tools/repo-tool-mod"
+
+# create addons.xml & upload to local dir
+$REPO_TOOL -u
