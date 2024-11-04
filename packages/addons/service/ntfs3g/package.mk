@@ -6,12 +6,12 @@ PKG_REV="0"
 PKG_LICENSE="GPLv3"
 PKG_DEPENDS_TARGET="toolchain fuse ntfs-3g_ntfsprogs"
 PKG_SECTION="service"
-PKG_SHORTDESC="ntfs-3g for udevil"
-PKG_LONGDESC="ntfs-3g for udevil"
+PKG_SHORTDESC="NTFS-3G for udevil"
+PKG_LONGDESC="NTFS-3G for udevil overrides the NTFS3 kernel driver with the NTFS-3G userspace driver used in older LibreELEC releases."
 PKG_TOOLCHAIN="manual"
 
 PKG_IS_ADDON="yes"
-PKG_ADDON_NAME="ntfs3g"
+PKG_ADDON_NAME="NTFS-3G"
 PKG_ADDON_TYPE="xbmc.service"
 
 addon() {
