@@ -2,9 +2,9 @@
 # Copyright (C) 2023-present Team LibreELEC (https://libreelec.tv)
 
 PKG_NAME="game.libretro.vice_xvic"
-PKG_VERSION="3.7.0.18-Nexus"
-PKG_SHA256="92d9ec7ed74d65a5a41de8464620dfc8b04cc6cb95607afa256561f44b6e0184"
-PKG_REV="2"
+PKG_VERSION="3.8.0.23-Omega"
+PKG_SHA256="faaea7b932271012c4c271bcec699fccd95b2ae1c4ce7bb2054e99316e2c948b"
+PKG_REV="1"
 PKG_ARCH="any"
 PKG_LICENSE="GPLv2"
 PKG_SITE="https://github.com/kodi-game/game.libretro.vice_xvic"
