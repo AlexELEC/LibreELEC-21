@@ -2,8 +2,8 @@
 # Copyright (C) 2016-present Team LibreELEC (https://libreelec.tv)
 
 PKG_NAME="libretro-vbam"
-PKG_VERSION="2ad7dd1a7980c808fffc9843d6e8bbf3b0112b2a"
-PKG_SHA256="845d7c60536e0323fb7169bc813f72cbc3676fbd4f82892a8229da875c3817e7"
+PKG_VERSION="e8494b56d12216b571f08c4283523c08e2d3cb9f"
+PKG_SHA256="e201a48843b82334b48590cc7801c1d11637bc30921eab40f003f2df17273c89"
 PKG_LICENSE="GPLv2"
 PKG_SITE="https://github.com/visualboyadvance-m/visualboyadvance-m"
 PKG_URL="https://github.com/visualboyadvance-m/visualboyadvance-m/archive/${PKG_VERSION}.tar.gz"
