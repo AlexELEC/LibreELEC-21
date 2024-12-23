@@ -7,7 +7,7 @@ PKG_SHA256="05f9da703fb5030aa5424e53a35d9b310d183b3b48aa777504e796c88fdd3da2"
 PKG_LICENSE="GPLv2"
 PKG_SITE="https://github.com/libretro/hatari"
 PKG_URL="https://github.com/libretro/hatari/archive/${PKG_VERSION}.tar.gz"
-PKG_DEPENDS_TARGET="toolchain"
+PKG_DEPENDS_TARGET="toolchain zlib"
 PKG_LONGDESC="New rebasing of Hatari based on Mercurial upstream. Tries to be a shallow fork for easy upstreaming later on."
 PKG_TOOLCHAIN="make"
 
