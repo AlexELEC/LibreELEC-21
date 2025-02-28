@@ -3,11 +3,11 @@
 
 PKG_NAME="mariadb"
 PKG_VERSION="11.4.3"
-PKG_REV="3"
+PKG_REV="5"
 PKG_SHA256="6f0017b9901bb1897de0eed21caef9ffa9d66ef559345a0d8a6f011308413ece"
 PKG_LICENSE="GPL2"
 PKG_SITE="https://mariadb.org"
-PKG_URL="https://downloads.mariadb.com/MariaDB/${PKG_NAME}-${PKG_VERSION}/source/${PKG_NAME}-${PKG_VERSION}.tar.gz"
+PKG_URL="https://archive.mariadb.org/${PKG_NAME}-${PKG_VERSION}/source/${PKG_NAME}-${PKG_VERSION}.tar.gz"
 PKG_DEPENDS_HOST="toolchain:host ncurses:host openssl:host"
 PKG_DEPENDS_TARGET="toolchain binutils boost bzip2 libaio libfmt libxml2 lz4 lzo ncurses openssl pcre2 systemd zlib mariadb:host"
 PKG_SHORTDESC="MariaDB is a community-developed fork of the MySQL."
