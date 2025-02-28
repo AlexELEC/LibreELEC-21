@@ -7,6 +7,8 @@
 #
 #   hid-remote --list-devices --lookup-id
 #
+#   hid-remote --lookup-id --learn --manufacturer <manufacturer> --product <product name>
+#
 #   remote-learn
 #
 #   hid-remote --lookup-id --learn \
