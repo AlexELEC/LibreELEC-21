@@ -2,8 +2,8 @@
 # Copyright (C) 2011-present Alex@ELEC (https://alexelec.tv)
 
 PKG_NAME="hid-remote"
-PKG_VERSION="2.1.2"
-PKG_SHA256="80b8cf4e07b177b8ef395b2de390d27f80ac83884eb71ec9e5fab2fd64b3e650"
+PKG_VERSION="2.1.3"
+PKG_SHA256="b03739f8eece7442e9d9e751a3d0d4dd0ea21443d4e2b3687a045655ffb9b6c7"
 PKG_LICENSE="GPL"
 PKG_SITE="https://github.com/AlexELEC/hid_mapper"
 PKG_URL="${PKG_SITE}/archive/${PKG_VERSION}.tar.gz"
