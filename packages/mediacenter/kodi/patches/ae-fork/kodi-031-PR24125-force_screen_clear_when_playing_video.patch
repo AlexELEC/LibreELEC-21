@@ -1,0 +1,22 @@
+From 2fca7e8447c1908aeae4e8a1ad52350ec3ff861c Mon Sep 17 00:00:00 2001
+From: smp79 <sergey79@gmail.com>
+Date: Tue, 21 Nov 2023 05:46:48 +0300
+Subject: [PATCH] force screen clear when playing a video
+
+---
+ xbmc/video/windows/GUIWindowFullScreen.cpp | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/xbmc/video/windows/GUIWindowFullScreen.cpp b/xbmc/video/windows/GUIWindowFullScreen.cpp
+index 7cebc5fa07ec7..7e139fd22bcce 100644
+--- a/xbmc/video/windows/GUIWindowFullScreen.cpp
++++ b/xbmc/video/windows/GUIWindowFullScreen.cpp
+@@ -180,6 +180,8 @@ void CGUIWindowFullScreen::ClearBackground()
+   const auto appPlayer = components.GetComponent<CApplicationPlayer>();
+   if (appPlayer->IsRenderingVideoLayer())
+     CServiceBroker::GetWinSystem()->GetGfxContext().Clear(0);
++  else
++    CServiceBroker::GetWinSystem()->GetGfxContext().Clear(0xff000000);
+ }
+ 
+ void CGUIWindowFullScreen::OnWindowLoaded()

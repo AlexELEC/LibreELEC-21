@@ -1,0 +1,10 @@
+#
+# device: Gi20sPRO-BT
+#
+# manufacturer : 1915
+# product : 1025
+#
+024100:KEY_ENTER
+02cf00:KEY_X
+02b600:KEY_O
+02b500:KEY_I

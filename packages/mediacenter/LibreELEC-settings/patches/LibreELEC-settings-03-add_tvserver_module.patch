@@ -1,0 +1,164 @@
+diff -Naurp LibreELEC-settings/resources/lib/defaults.py LibreELEC-settings-patch/resources/lib/defaults.py
+--- LibreELEC-settings/resources/lib/defaults.py	2023-10-30 07:42:04.000000000 +0000
++++ LibreELEC-settings-patch/resources/lib/defaults.py	2023-10-30 08:35:04.000000000 +0000
+@@ -85,6 +85,7 @@ system = {
+     'JOURNALD_CONFIG_FILE': '/storage/.cache/journald.conf.d/00_settings.conf'
+     }
+ 
++tvserver = {'ENABLED': True}
+ about = {'ENABLED': True}
+ 
+ _services = {
+@@ -95,4 +96,5 @@ _services = {
+     'obexd': ['obex.service'],
+     'crond': ['cron.service'],
+     'iptables': ['iptables.service'],
++    'tvlink': ['tvlink.service'],
+     }
+diff -Naurp LibreELEC-settings/resources/lib/modules/services.py LibreELEC-settings-patch/resources/lib/modules/services.py
+--- LibreELEC-settings/resources/lib/modules/services.py	2023-06-03 13:27:20.000000000 +0000
++++ LibreELEC-settings-patch/resources/lib/modules/services.py	2023-10-30 08:36:23.000000000 +0000
+@@ -545,7 +545,7 @@ class services(modules.Module):
+         SSHchange = False
+         newpwd = xbmcDialog.input(oe._(746))
+         if newpwd:
+-            if newpwd == "libreelec":
++            if newpwd == "mcpc":
+                 if os.path.isfile('/storage/.cache/shadow'):
+                     os.remove('/storage/.cache/shadow')
+                 shutil.copy2('/usr/cache/shadow', '/storage/.cache/shadow')
+diff -Naurp LibreELEC-settings/resources/lib/modules/tvserver.py LibreELEC-settings-patch/resources/lib/modules/tvserver.py
+--- LibreELEC-settings/resources/lib/modules/tvserver.py	1970-01-01 00:00:00.000000000 +0000
++++ LibreELEC-settings-patch/resources/lib/modules/tvserver.py	2023-10-30 08:37:23.000000000 +0000
+@@ -0,0 +1,131 @@
++# SPDX-License-Identifier: GPL-2.0-or-later
++# Copyright (C) 2009-2013 Stephan Raue (stephan@openelec.tv)
++# Copyright (C) 2011-present AlexELEC (https://alexelec.tv)
++
++import log
++import modules
++import oe
++import os
++import xbmcgui
++
++xbmcDialog = xbmcgui.Dialog()
++
++class tvserver(modules.Module):
++
++    ENABLED = False
++
++    menu = {'91': {
++        'name': 43000,
++        'menuLoader': 'load_menu',
++        'listTyp': 'list',
++        'InfoText': 4300,
++        }}
++
++    @log.log_function()
++    def __init__(self, oeMain):
++        super().__init__()
++        self.struct = {
++            'tvlink': {
++                'order': 1,
++                'name': 42025,
++                'not_supported': [],
++                'settings': {
++                    'enable_tvlink': {
++                        'order': 1,
++                        'name': 42026,
++                        'value': '0',
++                        'action': 'initialize_tvlink',
++                        'type': 'bool',
++                        'InfoText': 4226,
++                        },
++                    },
++                },
++            }
++
++    @log.log_function()
++    def start_service(self):
++        self.load_values()
++        self.initialize_tvlink(service=1)
++
++    @log.log_function()
++    def do_init(self):
++        self.load_values()
++
++    @log.log_function()
++    def set_value(self, listItem):
++        self.struct[listItem.getProperty('category')]['settings'][listItem.getProperty('entry')]['value'] = listItem.getProperty('value')
++
++    @log.log_function()
++    def load_menu(self, focusItem):
++        oe.winOeMain.build_menu(self.struct)
++
++    @log.log_function()
++    def load_values(self):
++        self.struct['tvlink']['settings']['enable_tvlink']['value'] = oe.get_service_state('tvlink')
++
++    @log.log_function()
++    def initialize_tvlink(self, **kwargs):
++        if 'listItem' in kwargs:
++            self.set_value(kwargs['listItem'])
++        options = {}
++        state = 0
++        if self.struct['tvlink']['settings']['enable_tvlink']['value'] == '1':
++            if not os.path.exists('/storage/.config/tvlink/tvlink'):
++                tvl_status = self.get_tvl_source()
++                if tvl_status == 'OK':
++                    oe.notify(oe._(32363), 'Starting TVLINK...')
++                else:
++                    self.struct['tvlink']['settings']['enable_tvlink']['value'] = '0'
++                    answer = xbmcDialog.ok('Install TVLINK',
++                            'Error: The program is not installed, try again.')
++                    return
++            state = 1
++        oe.set_service('tvlink', options, state)
++
++    @log.log_function()
++    def get_tvl_source(self):
++        import tarfile
++        import platform
++        import requests
++        from urllib.parse import urlparse
++
++        arch_machine = platform.machine()
++
++        if arch_machine == 'armv7l':
++            lst_url = 'https://github.com/AlexELEC/TVLINK-arm7/releases/latest'
++            dnl_url = 'https://github.com/AlexELEC/TVLINK-arm7/releases/download'
++        elif arch_machine == 'aarch64':
++            lst_url = 'https://github.com/AlexELEC/TVLINK-arm64/releases/latest'
++            dnl_url = 'https://github.com/AlexELEC/TVLINK-arm64/releases/download'
++        elif arch_machine == 'x86_64':
++            lst_url = 'https://github.com/AlexELEC/TVLINK-x86_64/releases/latest'
++            dnl_url = 'https://github.com/AlexELEC/TVLINK-x86_64/releases/download'
++        else:
++            return 'ERROR'
++
++        try:
++            r = requests.get(lst_url, allow_redirects=False)
++            last_ver_url = r.headers['Location']
++            last_ver_path = urlparse(last_ver_url).path
++            tmP, ver = os.path.split(last_ver_path)
++            last_dnl_url = f"{dnl_url}/{ver}/TVLINK-{ver}.tar.bz2"
++        except:
++            return 'ERROR'
++
++        root_dir = "/storage/.config/tvlink"
++        if not os.path.isdir(root_dir): os.makedirs(root_dir)
++
++        tvl_patch = f"{oe.TEMP}TVLINK-{ver}.tar.bz2"
++        downloaded = oe.download_file(last_dnl_url, tvl_patch)
++        if not downloaded: return 'ERROR'
++        oe.notify(oe._(32363), 'Install TVLINK...')
++
++        try:
++            with tarfile.open(tvl_patch, "r:bz2") as tar:
++                tar.extractall(root_dir)
++            os.remove(tvl_patch)
++        except:
++            return 'ERROR'
++
++        return 'OK'
++        

@@ -1,0 +1,21 @@
+diff -Naurp LibreELEC-settings/resources/lib/modules/connman.py LibreELEC-settings-patch/resources/lib/modules/connman.py
+--- LibreELEC-settings/resources/lib/modules/connman.py	2023-06-03 13:27:20.000000000 +0000
++++ LibreELEC-settings-patch/resources/lib/modules/connman.py	2023-10-30 07:36:37.000000000 +0000
+@@ -527,7 +527,7 @@ class connman(modules.Module):
+                 'wait_for_network_time': {
+                     'order': 2,
+                     'name': 32370,
+-                    'value': '10',
++                    'value': '20',
+                     'action': 'set_network_wait',
+                     'type': 'num',
+                     'parent': {
+@@ -576,7 +576,7 @@ class connman(modules.Module):
+     def load_values(self):
+         # Network Wait
+         self.struct['advanced']['settings']['wait_for_network']['value'] = '0'
+-        self.struct['advanced']['settings']['wait_for_network_time']['value'] = '10'
++        self.struct['advanced']['settings']['wait_for_network_time']['value'] = '20'
+         if os.path.exists(self.WAIT_CONF_FILE):
+             wait_file = open(self.WAIT_CONF_FILE, 'r')
+             for line in wait_file:

@@ -1,0 +1,17 @@
+diff -Naurp kodi/xbmc/platform/linux/input/LibInputHandler.cpp kodi-patch/xbmc/platform/linux/input/LibInputHandler.cpp
+--- kodi/xbmc/platform/linux/input/LibInputHandler.cpp	2022-02-20 10:23:00.000000000 +0200
++++ kodi-patch/xbmc/platform/linux/input/LibInputHandler.cpp	2022-02-20 10:35:14.000000000 +0200
+@@ -35,13 +35,6 @@ static int open_restricted(const char *p
+     return -errno;
+   }
+ 
+-  auto ret = ioctl(fd, EVIOCGRAB, (void*)1);
+-  if (ret < 0)
+-  {
+-    CLog::Log(LOGDEBUG, "{} - grab requested, but failed for {} ({})", __FUNCTION__, path,
+-              strerror(errno));
+-  }
+-
+   return fd;
+ }
+ 

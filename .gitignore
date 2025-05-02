@@ -17,6 +17,7 @@ mkpkg-temp
 
 # private working directory
 /.work/
+/packages/xmedia/
 
 # dedicated filesystem
 /lost+found/

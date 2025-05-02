@@ -1,0 +1,60 @@
+From 4f6e86976f5617a5d51855fdbede6a12170915b8 Mon Sep 17 00:00:00 2001
+From: afl1 <afl2001@gmail.com>
+Date: Mon, 11 Mar 2019 21:34:14 +0100
+Subject: [PATCH] Allow audio passthrough for realtime streams (liveTV)
+
+Patch: kodi-le-060-allow-passthrough-for-realtime.patch
+---
+ xbmc/cores/VideoPlayer/VideoPlayerAudio.cpp | 18 +-----------------
+ 1 file changed, 1 insertion(+), 17 deletions(-)
+
+diff --git a/xbmc/cores/VideoPlayer/VideoPlayerAudio.cpp b/xbmc/cores/VideoPlayer/VideoPlayerAudio.cpp
+index d6aa63a88c..4ee9943d9c 100644
+--- a/xbmc/cores/VideoPlayer/VideoPlayerAudio.cpp
++++ b/xbmc/cores/VideoPlayer/VideoPlayerAudio.cpp
+@@ -78,8 +78,6 @@ bool CVideoPlayerAudio::OpenStream(CDVDStreamInfo hints)
+ {
+   CLog::Log(LOGINFO, "Finding audio codec for: {}", hints.codec);
+   bool allowpassthrough = !CServiceBroker::GetSettingsComponent()->GetSettings()->GetBool(CSettings::SETTING_VIDEOPLAYER_USEDISPLAYASCLOCK);
+-  if (m_processInfo.IsRealtimeStream())
+-    allowpassthrough = false;
+ 
+   CAEStreamInfo::DataType streamType =
+       m_audioSink.GetPassthroughStreamType(hints.codec, hints.samplerate, hints.profile);
+@@ -132,8 +130,6 @@ void CVideoPlayerAudio::OpenStream(CDVDStreamInfo& hints, std::unique_ptr<CDVDAu
+   m_synctype = SYNC_DISCON;
+   if (CServiceBroker::GetSettingsComponent()->GetSettings()->GetBool(CSettings::SETTING_VIDEOPLAYER_USEDISPLAYASCLOCK))
+     m_synctype = SYNC_RESAMPLE;
+-  else if (m_processInfo.IsRealtimeStream())
+-    m_synctype = SYNC_RESAMPLE;
+ 
+   if (m_synctype == SYNC_DISCON)
+     CLog::LogF(LOGINFO, "Allowing max Out-Of-Sync Value of {} ms", m_disconAdjustTimeMs);
+@@ -500,18 +496,6 @@ bool CVideoPlayerAudio::ProcessDecoderOutput(DVDAudioFrame &audioframe)
+       }
+     }
+ 
+-    // if stream switches to realtime, disable pass through
+-    // or switch to resample
+-    if (m_processInfo.IsRealtimeStream() && m_synctype != SYNC_RESAMPLE)
+-    {
+-      m_synctype = SYNC_RESAMPLE;
+-      if (SwitchCodecIfNeeded())
+-      {
+-        audioframe.nb_frames = 0;
+-        return false;
+-      }
+-    }
+-
+     // Display reset event has occurred
+     // See if we should enable passthrough
+     if (m_displayReset)
+@@ -692,7 +676,7 @@ bool CVideoPlayerAudio::SwitchCodecIfNeeded()
+   m_displayReset = false;
+ 
+   bool allowpassthrough = !CServiceBroker::GetSettingsComponent()->GetSettings()->GetBool(CSettings::SETTING_VIDEOPLAYER_USEDISPLAYASCLOCK);
+-  if (m_processInfo.IsRealtimeStream() || m_synctype == SYNC_RESAMPLE)
++  if (m_synctype == SYNC_RESAMPLE)
+     allowpassthrough = false;
+ 
+   CAEStreamInfo::DataType streamType = m_audioSink.GetPassthroughStreamType(

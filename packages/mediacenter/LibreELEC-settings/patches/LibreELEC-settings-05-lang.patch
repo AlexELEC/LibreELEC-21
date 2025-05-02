@@ -1,0 +1,138 @@
+diff -Naurp LibreELEC-settings/resources/language/resource.language.en_gb/strings.po LibreELEC-settings-patch/resources/language/resource.language.en_gb/strings.po
+--- LibreELEC-settings/resources/language/resource.language.en_gb/strings.po	2024-03-07 11:50:50.000000000 +0000
++++ LibreELEC-settings-patch/resources/language/resource.language.en_gb/strings.po	2024-03-13 07:32:58.000000000 +0000
+@@ -1095,3 +1095,42 @@ msgstr ""
+ msgctxt "#32419"
+ msgid "Error sending log files. Please try again."
+ msgstr ""
++
++
++########## TV Service #########
++
++msgctxt "#43000"
++msgid "TV services"
++msgstr ""
++
++msgctxt "#4300"
++msgid "Configure TV services."
++msgstr ""
++
++### TVLINK ###
++
++msgctxt "#42025"
++msgid "TVLINK server"
++msgstr ""
++
++msgctxt "#42026"
++msgid "Enable TVLINK"
++msgstr ""
++
++msgctxt "#4226"
++msgid "TVLINK is a restreamer and an aggregator of IPTV channels (http://ip-address:2020)."
++msgstr ""
++
++### HID-REMOTE ###
++
++msgctxt "#43010"
++msgid "HID remote control"
++msgstr ""
++
++msgctxt "#43011"
++msgid "Enable HID remote"
++msgstr ""
++
++msgctxt "#4311"
++msgid "HID-Remote (hid_mapper) daemon to map HID events to key events."
++msgstr ""
+diff -Naurp LibreELEC-settings/resources/language/resource.language.ru_ru/strings.po LibreELEC-settings-patch/resources/language/resource.language.ru_ru/strings.po
+--- LibreELEC-settings/resources/language/resource.language.ru_ru/strings.po	2024-03-07 11:50:50.000000000 +0000
++++ LibreELEC-settings-patch/resources/language/resource.language.ru_ru/strings.po	2024-03-13 07:33:30.000000000 +0000
+@@ -1118,3 +1118,42 @@ msgstr ""
+ msgctxt "#32419"
+ msgid "Error sending log files. Please try again."
+ msgstr ""
++
++
++########## TV Service #########
++
++msgctxt "#43000"
++msgid "TV services"
++msgstr "ТВ сервисы"
++
++msgctxt "#4300"
++msgid "Configure TV services."
++msgstr "Настройки ТВ серверов."
++
++### TVLINK ###
++
++msgctxt "#42025"
++msgid "TVLINK server"
++msgstr "TVLINK сервер"
++
++msgctxt "#42026"
++msgid "Enable TVLINK"
++msgstr "Включить TVLINK"
++
++msgctxt "#4226"
++msgid "TVLINK is a restreamer and an aggregator of IPTV channels (http://ip-address:2020)."
++msgstr "TVLINK - рестример и агрегатор каналов IPTV (http://ip-address:2020)."
++
++### HID-REMOTE ###
++
++msgctxt "#43010"
++msgid "HID remote control"
++msgstr "Управление HID ПДУ"
++
++msgctxt "#43011"
++msgid "Enable HID remote"
++msgstr "Включить HID-Remote"
++
++msgctxt "#4311"
++msgid "HID-Remote (hid_mapper) daemon to map HID events to key events."
++msgstr "HID-Remote (hid_mapper) сервис для сопоставления событий HID с событиями клавиатуры."
+diff -Naurp LibreELEC-settings/resources/language/resource.language.uk_ua/strings.po LibreELEC-settings-patch/resources/language/resource.language.uk_ua/strings.po
+--- LibreELEC-settings/resources/language/resource.language.uk_ua/strings.po	2024-03-07 11:50:50.000000000 +0000
++++ LibreELEC-settings-patch/resources/language/resource.language.uk_ua/strings.po	2024-03-13 07:33:58.000000000 +0000
+@@ -1107,3 +1107,42 @@ msgstr ""
+ msgctxt "#32419"
+ msgid "Error sending log files. Please try again."
+ msgstr ""
++
++
++########## TV Service #########
++
++msgctxt "#43000"
++msgid "TV services"
++msgstr "ТВ сервіси"
++
++msgctxt "#4300"
++msgid "Configure TV services."
++msgstr "Налаштування ТВ серверів."
++
++### TVLINK ###
++
++msgctxt "#42025"
++msgid "TVLINK server"
++msgstr "TVLINK сервер"
++
++msgctxt "#42026"
++msgid "Enable TVLINK"
++msgstr "Вімкнути TVLINK"
++
++msgctxt "#4226"
++msgid "TVLINK is a restreamer and an aggregator of IPTV channels (http://ip-address:2020)."
++msgstr "TVLINK - рестример та агрегатор каналів IPTV (http://ip-address:2020)."
++
++### HID-REMOTE ###
++
++msgctxt "#43010"
++msgid "HID remote control"
++msgstr "Управління HID-пристроями"
++
++msgctxt "#43011"
++msgid "Enable HID remote"
++msgstr "Вімкнути HID-Remote"
++
++msgctxt "#4311"
++msgid "HID-Remote (hid_mapper) daemon to map HID events to key events."
++msgstr "HID-Remote (hid_mapper) сервіс для зіставлення подій HID з подіями клавіатури."

@@ -1,17 +1,3 @@
-# Do not build as root. Ever.
-if [[ "${EUID}" -eq 0 ]]; then
-  echo "Building as the root user is NOT supported. Use a regular user account for the build." 1>&2
-  exit 1
-fi
-
-# Spaces in paths are verboten
-if [[ ${PWD} =~ [[:space:]] ]]; then
-  echo "Current PWD: \"${PWD}\"" 1>&2
-  echo 1>&2
-  echo "Building in a folder that includes spaces is NOT supported. Use a folder without spaces." 1>&2
-  exit 1
-fi
-
 # set default language for buildsystem
 export LC_ALL=C
 
@@ -29,6 +15,12 @@ export PROJECT="${PROJECT:-Generic}"
 # default to Generic device if building Generic project without device set
 if [ "${PROJECT}" = "Generic" -a -z "${DEVICE}" ]; then
   export DEVICE="Generic"
+fi
+
+# default to RPi2 device if building RPi project without device set
+if [ "${PROJECT}" = "RPi" -a -z "${DEVICE}" ]; then
+  export DEVICE="RPi2"
+  ARCH="arm"
 fi
 
 # determines TARGET_ARCH, if not forced by user
